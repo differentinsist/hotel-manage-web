@@ -1,10 +1,13 @@
 <template>
-    <div>显示首页内容</div>
+  <div>
+    <h3>这里是评论区组件</h3>
+
+  </div>
 </template>
 
 <script>
     export default {
-        name: "luyou"
+        name: "comment-area"
     }
 </script>
 

@@ -1,0 +1,11 @@
+/*@import "normalize.css"; 这个不用了；开源的github上开源的样式；初始化项目的*/
+
+/*设置body、html、app组件占满全页面*/
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-width: 1366px;
+}

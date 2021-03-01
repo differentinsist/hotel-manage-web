@@ -6,7 +6,7 @@ import ElementUI from 'element-ui'
 //elementui的样式要单独导入
 import 'element-ui/lib/theme-chalk/index.css'
 // 导入自己定义的全局样式
-import './assets/css/global.css'
+import './assets/css/base.css'
 
 
 Vue.config.productionTip = false
