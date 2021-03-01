@@ -14,12 +14,13 @@ const CommentArea = () => import('../page/comment/CommentArea.vue')
 Vue.use(Router)
 
 const routes = [
-  // {path: '/', component: MyRoom},
+  {path: '/', component: HotelMall},
   {path: '/hotelmall', component: HotelMall},
   {path: '/myroom', component: MyRoom},
   {path: '/shop', component: Shop},
   {path: '/happytime', component: HappyTime},
-  {path: '/commentarea', component: CommentArea}
+  {path: '/commentarea', component: CommentArea},
+  {path: '/profile', component: Profile}
 ]
 
 

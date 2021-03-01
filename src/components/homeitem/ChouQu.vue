@@ -17,7 +17,7 @@
           background-color="#333744"
           text-color="#fff"
           active-text-color="#ffd04b" :router="true">
-          <!--一级菜单-->
+          <!--一级菜单(首页)-->
           <el-submenu index="1" >
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -39,7 +39,7 @@
             </el-menu-item>
           </el-submenu>
 
-          <!--一级菜单-->
+          <!--一级菜单(商城)-->
           <el-submenu index="2" @click="tzHome">
             <template slot="title">
               <i class="el-icon-open"></i>
@@ -61,14 +61,14 @@
             </el-menu-item>
           </el-submenu>
 
-          <!--一级菜单-->
-          <el-submenu index="3" @click="tzProfile">
+          <!--一级菜单(本人业务)-->
+          <el-submenu index="3" >
             <template slot="title">
               <i class="el-icon-aim"></i>
               <span>本人业务</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item index="1-1">
+            <el-menu-item index="/profile" @click="tzProfile">
               <template slot="title">
                 <i class="el-icon-location"></i>
                 <span>我的基本信息</span>
@@ -83,7 +83,7 @@
             </el-menu-item>
           </el-submenu>
 
-          <!--也作为一级菜单-->
+          <!--也作为一级菜单(评论区)-->
           <el-menu-item index="/commentarea" @click="tzCommentArea">
             <template slot="title">
               <i class="el-icon-crop"></i>
@@ -91,7 +91,7 @@
             </template>
           </el-menu-item>
 
-          <!--也作为一级菜单-->
+          <!--也作为一级菜单(happytime)-->
           <el-menu-item index="/happytime" @click="tzHappyTime">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -105,9 +105,9 @@
 
       <!--中间内容区域-->
       <el-main>
-        <span>Main</span>
+        <span>面包屑>>>> </span>
 
-    <router-view></router-view>
+        <router-view></router-view>
 
       </el-main>
     </el-container>
