@@ -4,7 +4,7 @@
     <el-header>
       <div>
         <img src="../../assets/touxiang.png" alt="">
-        <span>旅店系统</span>
+        <span>旅店..</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
@@ -104,11 +104,10 @@
       </el-aside>
 
       <!--中间内容区域-->
-      <el-main>
+      <el-main class="huadong">
         <span>面包屑>>>> </span>
-
+        <!--这个占位符必须有的；不然主页就没有内容-->
         <router-view></router-view>
-
       </el-main>
     </el-container>
 
@@ -124,11 +123,17 @@
 
     export default {
       name: "chouqu",
+      data(){
+        return {
+
+        }
+      },
       components: {
         Home,
         HotelMall
       },
       methods: {
+
         //退出的函数
         logout(){
           console.log('退出登录');
@@ -155,13 +160,13 @@
         }
       },
       created() {
-        request({
-          url: '/api/item/person/queryPersonByPid?pid=000001'
-        }).then(res => {
-          console.log(res);
-        }).catch(err => {
-          console.log(err);
-        })
+        // request({
+        //   url: '/api/item/person/queryPersonByPid?pid=000001'
+        // }).then(res => {
+        //   console.log(res);
+        // }).catch(err => {
+        //   console.log(err);
+        // })
       }
     }
 </script>
@@ -201,4 +206,11 @@
   .el-main {
     background-color: #eaedf1;
   }
+
+  /*.huadong {*/
+    /*position: sticky;*/
+    /*top: 44px;*/
+  /*}*/
+
+
 </style>
