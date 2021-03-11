@@ -40,7 +40,9 @@
         //上传后返回来的图片在服务器的URL
         imageUrl: '',
         //图片上传到服务器的地址
-        uploadURL: 'http://localhost:2263/api/upload/headPortrait'
+        uploadURL: 'http://api.renthotel.com/upload/headPortrait',
+        //设置允许的图片类型
+        canPicture: ['image/jpeg','image/png']
       }
     },
     created() {
@@ -59,16 +61,23 @@
         this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
+        // let canPicture = ['image/jpeg','image/png'];
+        // const isJPG = file.type === 'image/jpeg' ;
+        //indexOf是判断元素是否在数组里面；返回的是元素在数组的位置；第一个位置是0，不在就返回-1
+        const isTrue = this.canPicture.indexOf(file.type) >= 0;
+        console.log('--------看看isTrue的真假:--',isTrue, 'file.type是图片类型:',file.type);
         const isLt2M = file.size / 1024 / 1024 < 2;
+        // console.log('----isJPG',isJPG,'----isLt2M',isLt2M);
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+        if (!isTrue) {
+          this.$message.error('上传头像图片只能是 JPG或Png 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
-        return isJPG && isLt2M;
+        // return isJPG && isLt2M ;
+        return isTrue && isLt2M ;
+        // return true;
       }
     }
   }
