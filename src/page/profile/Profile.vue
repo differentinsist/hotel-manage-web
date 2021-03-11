@@ -18,7 +18,7 @@
       <!--<img src="../../assets/touxiang.png" alt="">-->
     <!--</div>-->
     <el-upload class="avatar-uploader"
-      action="http://localhost:2263/upload/headPortrait"
+      :action="uploadURL"
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload">
@@ -37,8 +37,10 @@
     data(){
       return{
         person: '',
-        //图片上传
-        imageUrl: ''
+        //上传后返回来的图片在服务器的URL
+        imageUrl: '',
+        //图片上传到服务器的地址
+        uploadURL: 'http://localhost:2263/api/upload/headPortrait'
       }
     },
     created() {
