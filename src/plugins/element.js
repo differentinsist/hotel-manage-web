@@ -16,7 +16,8 @@ import {
   Header,
   Aside,
   Main,
-  Input
+  Input,
+  Upload
 } from 'element-ui';
 
 Vue.use(Menu);
@@ -33,5 +34,6 @@ Vue.use(Header);
 Vue.use(Aside);
 Vue.use(Main);
 Vue.use(Input);
+Vue.use(Upload);
 
 
