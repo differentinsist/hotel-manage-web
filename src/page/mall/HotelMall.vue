@@ -1,35 +1,43 @@
 <template>
   <div>
-
     <el-row class="huadong">
       <el-col :span="8" v-for="(o, index) in roomList" :key="o" :offset="index > 0 ? index : 0" class="col">
         <div class="wrapper">
-        <el-card :body-style="{ padding: '0px' }">
-          <img src="../../assets/room/11.jpg" class="image">
-          <div style="padding: 10px;" class="divs">
-            <div class="roomspan"><span >房间编号：{{roomList[index].roomid}}</span></div>
-            <div class="roomprice"><span>价格：{{roomList[index].roomprice}}元</span></div>
-            <!--订单弹出框-->
-            <el-button type="text" @click="dialogVisible = true">点击下单</el-button>
-            <el-dialog
-              center="true"
-              title="请确认你的订单信息"
-              :visible.sync="dialogVisible"
-              width="30%"
-              :before-close="handleClose">
-              <div class="h3Class">
-                <h3>房间编号：{{roomList[index].roomid}}</h3>
-                <h3>价格：{{roomList[index].roomprice}}元</h3>
-              </div>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确定下单</el-button>
-              </span>
-            </el-dialog>
-          </div>
-        </el-card>
+          <el-card :body-style="{ padding: '0px' }">
+            <img src="../../assets/room/11.jpg" class="image">
+            <div style="padding: 10px;" class="divs">
+              <div class="roomspan"><span >房间编号：{{roomList[index].roomid}}</span></div>
+              <div class="roomprice"><span>价格：{{roomList[index].roomprice}}元</span></div>
+              <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；-->
+              <!--<el-button type="text" @click="dialogVisible = true">点击下单</el-button>-->
+              <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；把当前对象传递进去o，就是当前房间的信息了-->
+              <el-button type="text" @click="sendMsgToDialog(o)">点击下单</el-button>
+            </div>
+          </el-card>
         </div>
       </el-col>
+
+      <!--弹出框放在这里了，别放上面的循环里-->
+      <el-dialog
+        title="请确认你的订单信息"
+        :visible.sync="dialogVisible"
+        :center="true"
+        width="30%"
+        :before-close="handleClose">
+        <div class="h3Class">
+          <!--这里拿不到对应的值-->
+          <h3>房间编号：{{dialogData.roomid}}</h3>
+          <h3>价格：{{dialogData.roomprice}}元</h3>
+          <h3>时长：{{dialogData.roomtime}}</h3>
+          <h3>提示：下单成功会生成一个房间密码用来开门</h3>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <!--<el-button type="primary" @click="dialogVisible = false">确定下单</el-button>-->
+          <el-button type="primary" @click="jumpToCart()">确定下单</el-button>
+        </span>
+      </el-dialog>
+
     </el-row>
 
     <!--分页栏-->
@@ -73,8 +81,17 @@
         totalh: 0,
 
         input: '', //搜索框,
-        //订单弹出框
-        dialogVisible: false
+        //订单弹出框（控制对话框的显示和隐藏）
+        dialogVisible: false,
+
+        //拿到弹窗数据用来赋值，就是在按钮哪里写一个方法；把对象传递进去，拿到当前的值就是当前房间
+        dialogData: {
+          roomid: '',
+          roomprice: '',
+          roomtime: ''
+        },
+
+
       };
     },
     // present request GET  api路径前面必须有斜杠    拿到数组的对象的话，就要通过索引来拿数据？
@@ -82,6 +99,7 @@
       this.sendRequest();
     },
     methods: {
+      //发送请求的代码抽取到这里
       sendRequest(){
         request({
           // url: '/api/item/room/showAllRoomMessage?page=1&rows=12&sortBy=roomprice&desc=false',
@@ -123,14 +141,28 @@
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
-          done();
+            done();
       })
       .catch(_ => {});
+      },
+
+      //拿到当前房间的数据到弹出对话框中显示
+      sendMsgToDialog(itemDialog){
+        this.dialogVisible = true; //意思是点击的时候改变为true就是运行弹出对话框;
+        this.dialogData.roomid = itemDialog.roomid;
+        this.dialogData.roomprice = itemDialog.roomprice;
+        this.dialogData.roomtime = itemDialog.roomtime;
+      },
+
+      //跳转到我的订单页面；显示订房信息和开房门的密码
+      jumpToCart(){
+        this.dialogVisible = false; //设置为false就是让弹出框隐藏;
+
       }
 
     },
     mounted(){
-      thid.scroll = new CScroll(document.querySelector('.wrapper'), {
+      this.scroll = new CScroll(document.querySelector('.wrapper'), {
 
       })
     }

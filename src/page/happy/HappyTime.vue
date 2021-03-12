@@ -1,13 +1,57 @@
 <template>
-  <h3>rest time VUE</h3>
+  <div class="tet">
+    <div>
+      <span>我订购的房间信息</span>
+      <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>  <h1>2626262</h1>
+      <h1>2626262</h1>
+      <h1>2626262</h1>
+    </div>
+  </div>
 </template>
 
 <script>
+  import CScroll from 'better-scroll'
+
     export default {
-        name: "happy-time"
+      name: "happy-time",
+      data(){
+        return {
+          scroll: null
+        }
+      },
+      mounted(){
+        console.log('yyyyyyyyyyyyyy');
+        this.scroll = new CScroll(document.querySelector('.tet'), {})
+      }
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+
+  .tet {
+    height: 30%;
+    background-color: red;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
 
 </style>

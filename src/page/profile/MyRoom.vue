@@ -1,59 +1,49 @@
 <template>
-  <div class="tet">
-    <div>
-      <span>我订购的房间信息</span>
-      <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>  <h1>2626262</h1>
-      <h1>2626262</h1>
-      <h1>2626262</h1>
-    </div>
+  <div>
+    <table>
+      <tr>
+        <td>房间编号:</td><td>{{}}</td>
+        <td>房间时常:</td><td>{{}}</td>
+      </tr>
+      <tr>
+        <td>房间价格:</td><td>{{}}</td>
+        <td>开门密码:</td><td>{{}}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script>
 
-  import CScroll from 'better-scroll'
+  export default {
+    name: "my-room",
+    data(){
+      return {
 
-    export default {
-      name: "my-room",
-      data(){
-        return {
-          scroll: null
-        }
-      },
-      mounted(){
-        console.log('yyyyyyyyyyyyyy');
-        this.scroll = new CScroll(document.querySelector('.tet'), {
-
-        })
       }
     }
+  }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
-  .tet {
-    height: 30%;
-    background-color: red;
-    overflow: hidden;
-    overflow-y: scroll;
+  table {
+    border: 1px solid #e9e9e9;
+    border-collapse: collapse;
+    border-spacing: 0;
   }
+
+  th,td {
+    padding: 8px 16px;
+    border: 1px solid #e9e9e9;
+    text-align: left;
+    height: 70px;
+  }
+
+  th {
+    background-color: #f7f7f7;
+    color: #5c6b77;
+    font-weight: 600;
+  }
+
 </style>
