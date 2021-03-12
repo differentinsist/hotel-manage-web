@@ -38,7 +38,7 @@
       return{
         person: '',
         //上传后返回来的图片在服务器的URL
-        imageUrl: '',
+        imageUrl: 'http://image.leyou.com/group1/M00/00/00/wKjZgGBKxE6ARGchAAA1Q7CttRc836.png',
         //图片上传到服务器的地址
         uploadURL: 'http://api.renthotel.com/upload/headPortrait',
         //设置允许的图片类型
@@ -59,6 +59,7 @@
       //图片上传
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
+        console.log('图片URL',imageUrl);
       },
       beforeAvatarUpload(file) {
         // let canPicture = ['image/jpeg','image/png'];

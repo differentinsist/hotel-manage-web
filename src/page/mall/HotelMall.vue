@@ -6,11 +6,26 @@
         <div class="wrapper">
         <el-card :body-style="{ padding: '0px' }">
           <img src="../../assets/room/11.jpg" class="image">
-          <!--<img src="{{roomList[index].roompicture}}" class="image">-->
           <div style="padding: 10px;" class="divs">
             <div class="roomspan"><span >房间编号：{{roomList[index].roomid}}</span></div>
             <div class="roomprice"><span>价格：{{roomList[index].roomprice}}元</span></div>
-            <el-button type="primary" round>下单预定</el-button>
+            <!--订单弹出框-->
+            <el-button type="text" @click="dialogVisible = true">点击下单</el-button>
+            <el-dialog
+              center="true"
+              title="请确认你的订单信息"
+              :visible.sync="dialogVisible"
+              width="30%"
+              :before-close="handleClose">
+              <div class="h3Class">
+                <h3>房间编号：{{roomList[index].roomid}}</h3>
+                <h3>价格：{{roomList[index].roomprice}}元</h3>
+              </div>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确定下单</el-button>
+              </span>
+            </el-dialog>
           </div>
         </el-card>
         </div>
@@ -57,7 +72,9 @@
         desch: false,
         totalh: 0,
 
-        input: '' //搜索框
+        input: '', //搜索框,
+        //订单弹出框
+        dialogVisible: false
       };
     },
     // present request GET  api路径前面必须有斜杠    拿到数组的对象的话，就要通过索引来拿数据？
@@ -101,6 +118,14 @@
         this.pageh = val;
         console.log('page',this.pageh);
         this.sendRequest();
+      },
+      //订单弹出框
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+          done();
+      })
+      .catch(_ => {});
       }
 
     },
@@ -185,5 +210,8 @@
     /*position: center;*/
   /*}*/
 
-
+  /*订单弹出框的样式*/
+  .h3Class {
+    padding-left: 50px;
+  }
 </style>
