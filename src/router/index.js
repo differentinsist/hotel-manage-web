@@ -16,7 +16,8 @@ Vue.use(Router)
 const routes = [
   {path: '/', component: HotelMall},
   {path: '/hotelmall', component: HotelMall},
-  {path: '/myroom', component: MyRoom},
+  // {path: '/myroom', name: '/myroom', component: MyRoom},
+  {path: '/myroom',component: MyRoom},
   {path: '/shop', component: Shop},
   {path: '/happytime', component: HappyTime},
   {path: '/commentarea', component: CommentArea},

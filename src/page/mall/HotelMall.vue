@@ -4,7 +4,7 @@
       <el-col :span="8" v-for="(o, index) in roomList" :key="o" :offset="index > 0 ? index : 0" class="col">
         <div class="wrapper">
           <el-card :body-style="{ padding: '0px' }">
-            <img src="../../assets/room/11.jpg" class="image">
+            <img :src="roomList[index].roompicture" class="image">
             <div style="padding: 10px;" class="divs">
               <div class="roomspan"><span >房间编号：{{roomList[index].roomid}}</span></div>
               <div class="roomprice"><span>价格：{{roomList[index].roomprice}}元</span></div>
@@ -30,11 +30,12 @@
           <h3>价格：{{dialogData.roomprice}}元</h3>
           <h3>时长：{{dialogData.roomtime}}</h3>
           <h3>提示：下单成功会生成一个房间密码用来开门</h3>
+          <h3>现在这个状态一个人只能定一间</h3>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <!--<el-button type="primary" @click="dialogVisible = false">确定下单</el-button>-->
-          <el-button type="primary" @click="jumpToCart()">确定下单</el-button>
+          <el-button type="primary" @click="jumpToMyRoom()">确定下单</el-button>
         </span>
       </el-dialog>
 
@@ -54,13 +55,13 @@
       </el-pagination>
     </div>
   </div>
-
 </template>
 
 <script>
 
   import {request} from "../../network/request";
-  import CScroll from 'better-scroll'
+  import CScroll from 'better-scroll';
+
 
 
   export default {
@@ -89,11 +90,12 @@
           roomid: '',
           roomprice: '',
           roomtime: ''
-        },
+        }
 
 
       };
     },
+
     // present request GET  api路径前面必须有斜杠    拿到数组的对象的话，就要通过索引来拿数据？
     created(){
       this.sendRequest();
@@ -154,10 +156,28 @@
         this.dialogData.roomtime = itemDialog.roomtime;
       },
 
-      //跳转到我的订单页面；显示订房信息和开房门的密码
-      jumpToCart(){
-        this.dialogVisible = false; //设置为false就是让弹出框隐藏;
+      //跳转到我的订单页面；显示订房信息和开房门的密码（这是通过路由传递值的方式；不好；页面刷新就没了）
+      // jumpToMyRoom(){
+      //   this.dialogVisible = false; //设置为false就是让弹出框隐藏;
+      //   this.$router.replace({name:'/myroom', params:{roomvalue: this.dialogData}});
+      // }
 
+      //跳转到我的订单页面；显示订房信息和开房门的密码
+      //思路就是获取到当前按钮房间的信息，然后把信息存储在sessionStorage中；好像sessionStorage中只能
+      // 存储String类型；对象的话就要通过转换JSON.stringify()来转换。
+      //注意：最开始我是通过路由带参数的方式把值传递过去没使用存储在sessionStorage中；但是路由带参数的方式在
+      //页面刷新或者点其他页面再点回来就没有值了；因为页面初始化就没有值了；你不是从按钮点跳转过来的话；实际保存在redis中最好
+      jumpToMyRoom(){
+        this.dialogVisible = false; //设置为false就是让弹出框隐藏;
+        // sessionStorage.setItem('roomkey',this.dialogData);//不能直接存储对象
+        let str = JSON.stringify(this.dialogData);
+        let sessionObject = window.sessionStorage;
+        sessionObject.obj = str; //保存到sessionStorage中这样在另一个页面中就可以从sessionStorage中那值了（obj就是key了对吧）
+        // let getStr = sessionStorage.obj;  //获取值(这个是值是字符串[本来是对象的])；在另一个vue页面写
+        // let getOb = JSON.parse(getStr);   //把字符串转为对象;也是在另一个页面写的
+        console.log('看看sessionStorage：',sessionStorage.getItem('obj')); //obj就相当于对象的键了；可以获取值了
+        console.log('看看sessionStorage：',sessionObject); //整个sessionStorage里面的东西
+        this.$router.replace('/myroom');
       }
 
     },
