@@ -1,12 +1,11 @@
 <template>
   <div>
     <div>
-    <ul class="infinite-list" v-infinite-scroll="load" >
-      <li v-for="i in count" class="infinite-list-item">
-        <h3>这里是评论区组件</h3>
 
-      </li>
-    </ul>
+        <h3>这里是评论区组件</h3>
+        <h3>搞个评分组件</h3>
+
+
     </div>
   </div>
 </template>
@@ -16,13 +15,11 @@
       name: "comment-area",
       data () {
         return {
-          count: 0
+
         }
       },
       methods: {
-        load () {
-          this.count += 2
-        }
+
       }
     }
 </script>

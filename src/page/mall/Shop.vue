@@ -18,6 +18,19 @@
       <el-table-column prop="goodsdiscription" label="描述" width="200"></el-table-column>
       <el-table-column prop="goodspicture" label="图片" width="180"></el-table-column>
     </el-table>
+
+    <!--分页栏-->
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageh"
+        :page-sizes="[10, 15, 20, 40,50]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalh">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -28,15 +41,19 @@
     name: "shop",
     data(){
       return {
+        //商品数据
         tableData: [],
-        //发送get请求的参数
+        //发送get请求的参数；也就是分页参数
         keyh: '',
-        pageh: 1,
-        rowsh: 5,
+        pageh: 1,  //显示第几页
+        rowsh: 10,  //一页有多少数据
         sortByh: '',
         desch: false,
+        totalh: '',
         //搜索框
         input: ''
+
+
       }
     },
     created() {
@@ -57,6 +74,7 @@
             desc: this.desch
           }
         }).then(res => {
+          this.totalh = res.data.total;
           console.log(res);
         this.tableData = res.data.items;
         }).catch(err => {
@@ -68,6 +86,22 @@
         this.keyh = document.getElementById('inputh').value;
         console.log('key:',this.keyh);
         //然后就发送请求获取数据
+        this.sendRequest();
+      },
+
+      //设置分页条的（在分页参数改变的时候重新发送请求重新获取分页后的数据；
+      // 就是你选第几页的时候会触发一些方法；传递val参数进来；然后再从新发送请求）
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.rowsh = val;
+        this.pageh = 1; //每页显示条数改变后；我想重置为默认显示第一页；可以写死？？？？？？？？？？？？
+        console.log('rows',this.rowsh);
+        this.sendRequest();
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.pageh = val;
+        console.log('page',this.pageh);
         this.sendRequest();
       }
     }

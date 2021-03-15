@@ -4,7 +4,7 @@
     <el-header>
       <div>
         <img src="../../assets/touxiang.png" alt="">
-        <span>旅店..</span>
+        <span>旅店系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>

@@ -18,7 +18,8 @@ import {
   Main,
   Input,
   Upload,
-  Dialog
+  Dialog,
+  Carousel
 } from 'element-ui';
 
 Vue.use(Menu);
@@ -37,5 +38,6 @@ Vue.use(Main);
 Vue.use(Input);
 Vue.use(Upload);
 Vue.use(Dialog);
+Vue.use(Carousel);
 
 
