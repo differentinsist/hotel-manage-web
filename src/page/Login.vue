@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <h1>登陆组件</h1>
   </div>
 </template>
 
