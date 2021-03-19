@@ -3,7 +3,7 @@
     <!--头部区域-->
     <el-header>
       <div>
-        <img src="../../assets/touxiang.png" alt="">
+        <img src="../assets/touxiang.png" alt="">
         <span>旅店系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
@@ -53,7 +53,7 @@
               </template>
             </el-menu-item>
             <!--二级菜单-->
-            <el-menu-item index="1-2">
+            <el-menu-item index="/cart" @click="tzCart">
               <template slot="title">
                 <i class="el-icon-location"></i>
                 <span>我的购物车</span>
@@ -75,7 +75,7 @@
               </template>
             </el-menu-item>
             <!--二级菜单-->
-            <el-menu-item index="1-2">
+            <el-menu-item index="/history" @click="tzHistory">
               <template slot="title">
                 <i class="el-icon-location"></i>
                 <span>历史记录</span>
@@ -102,7 +102,6 @@
         </el-menu>
 
       </el-aside>
-
       <!--中间内容区域-->
       <el-main class="huadong">
         <span>面包屑>>>> </span>
@@ -116,10 +115,10 @@
 
 <script>
 
-  import {request} from '../../network/request.js'
+  import {request} from '../network/request.js'
 
-  import Home from '../../page/home/Home.vue'
-  import HotelMall from '../../page/mall/HotelMall.vue'
+
+  import HotelMall from '../page/mall/HotelMall.vue'
 
     export default {
       name: "chouqu",
@@ -129,7 +128,6 @@
         }
       },
       components: {
-        Home,
         HotelMall
       },
       methods: {
@@ -157,6 +155,12 @@
         },
         tzCommentArea(){
           this.$router.replace('/commentarea')
+        },
+        tzCart(){
+          this.$router.replace('/cart')
+        },
+        tzHistory(){
+          this.$router.replace('/history')
         }
       },
       created() {
