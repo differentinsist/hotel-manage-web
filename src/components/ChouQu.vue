@@ -132,9 +132,11 @@
       },
       methods: {
 
-        //退出的函数
+        //退出的函数(退出之后要做什么处理吗；比如清除啥的、、)
         logout(){
           console.log('退出登录');
+          window.sessionStorage.clear(); //退出的话就清除浏览器的sessionStorage；就是去除token信息这样,
+          this.$router.replace('/login');//清除后就定位到登陆页面；就得重新登陆
         },
         tzHome(){
           console.log('跳转到首页了吗');

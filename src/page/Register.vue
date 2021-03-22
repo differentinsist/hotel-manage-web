@@ -7,17 +7,28 @@
         <img src="../assets/touxiang.png" alt="">
       </div>
       <!--from表单区域；也就是登陆用户名密码那些，是一个表单-->
-      <el-form ref="loginFormRef" class="login_form" :model="loginForm" :rules="loginFormRules" label-width="80px" >
+      <el-form ref="loginFormRef" class="login_form" :model="loginForm" :rules="loginFormRules" label-width="100px" >
         <el-form-item label="用户名:" prop="username">
           <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码:" prop="password">
           <el-input type="password" v-model="loginForm.password"></el-input>
         </el-form-item>
+        <el-form-item label="身份证号:" prop="password">
+          <el-input type="password" v-model="loginForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="出生日期:" prop="password">
+          <el-input type="password" v-model="loginForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="电话:" prop="password">
+          <el-input type="password" v-model="loginForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="头像:" prop="password">
+          <el-input type="password" v-model="loginForm.password"></el-input>
+        </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary" @click="login">登陆</el-button>
+          <el-button type="primary" @click="login">注册</el-button>
           <el-button type="info" class="rightButton" @click="resetLoginForm">清空</el-button>
-          <el-button type="info" class="registerButton" @click="goToRegister">去注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -29,13 +40,13 @@
   import {request} from "../network/request";
 
   export default {
-    name: "login",
+    name: "register",
     data(){
       return {
         //输入框写入的数据会绑定到这个对象，可以拿到用于发送请求
         loginForm: {
-          username: 'admin',
-          password: 'administrator'
+          username: '',
+          password: ''
         },
         //定义表单验证的规则
         loginFormRules: {
@@ -65,23 +76,18 @@
       //发送登陆请求的方法，抽取在这里了
       sendLoginRequest(){
         request({
-          // url: '/api/user/person/query',
-          url: '/api/auth/accredit',
+          url: '/api/user/person/query',
           method: 'post',
           // data:this.loginForm
           data: this.getUser
         }).then((res) => {
           console.log('用户基本信息',res);
           //成功的话就跳转到主页；是在这里写吗？then里面是发送成功还是获取到数据成功？搞清楚
-          window.sessionStorage.setItem('token',res.data.token);  //这里就是【第一步】
-          console.log('发请求里面打印token=',window.sessionStorage.getItem('token'))
-          this.$router.replace('/hotelmall');  //记得路由操作一定要放在设置sessionStorage之后(也就是第一步之后)不然index.js那里拿不到值
-          return this.$message.success("登陆成功"); //提示
+          this.$router.replace('/hotelmall');
         }).catch((err) => {
           console.log('输出错误信息就行了吗',err);  //如果报错了都是打印结果，不做其他处理吗
-          return this.$message.error("登陆失败,用户名或密码错误、不记得就注册一个吧,或者");
+          this.$router.replace('/hotelmall');  //改----------------
         })
-        // console.log('这外面还能拿到res吗',res);拿不到
       },
       resetLoginForm(){
         console.log(this);//这个this就是整个组件，然后里面有refs对象，然后我们定义的表单对象在refs里面
@@ -93,19 +99,9 @@
           // console.log(valid);
           console.log('点击了登陆按钮');
           //if(!valid) return; //如果数据验证不通过，就不发送请求
-          // if(valid) return; //改-----(都能登陆成功)-----------
-          if(!valid) return;
-          this.sendLoginRequest();  //发送请求
-          // console.log('看那返回的结果',res.status);这里是那不到res的，所以暂时无法在这里判断
-
-          // if(res.status !== 200) return this.$message.error("用户名或密码错误"); //用户名验证失败就提示密码错误
-          // return this.$message.success("登陆成功");
+          if(valid) return; //改----------------
+          this.sendLoginRequest();
         })
-      },
-      //点击跳转到注册页面
-      goToRegister(){
-        console.log('跳转到注册页面');
-        this.$router.replace('/register');
       }
     }
   }
@@ -113,26 +109,24 @@
 
 <style lang="less" scoped>
 
-  //设置最外面的div的也是和背景色；背景色可以替换为图片吗？？？
+  /*设置最外面的div的也是和背景色；背景色可以替换为图片吗？？？*/
   .login_container {
     background-color: #2b4b6d;
     height: 100%;
   }
-
-  //设置那个登陆框的颜色
+  /*设置那个登陆框的颜色*/
   .login_box {
-    width: 450px;
-    height: 300px;
+    width: 500px;
+    height: 500px;
     background-color: #fff;
-    border-radius: 10px;        //登陆div区域的圆角
+    border-radius: 5px;        //登陆div区域的圆角
     position: absolute;  //相对位置
     left: 50%;           //左边相对百分之五十
     top: 50%;            //顶部也是百分之五十
     transform: translate(-50%,-50%); //再设置这个就完全居中了
-
     .touxiangclass {  //设置头像区域的div样式
-      height: 120px;
-      width: 120px;
+      height: 80px;
+      width: 80px;
       border: 1px solid #eee;
       border-radius: 50%;
       padding: 10px;
@@ -164,8 +158,9 @@
     display: flex;
     justify-content: space-between;
     /*.rightButton {*/
-      /*left: 10px;*/
+    /*left: 10px;*/
     /*}*/
   }
+
 
 </style>

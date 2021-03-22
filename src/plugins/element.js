@@ -19,7 +19,8 @@ import {
   Input,
   Upload,
   Dialog,
-  Carousel
+  Carousel,
+  Message
 } from 'element-ui';
 
 Vue.use(Menu);
@@ -39,5 +40,7 @@ Vue.use(Input);
 Vue.use(Upload);
 Vue.use(Dialog);
 Vue.use(Carousel);
+
+Vue.prototype.$message = Message
 
 
