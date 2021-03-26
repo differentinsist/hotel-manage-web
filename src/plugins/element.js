@@ -20,7 +20,10 @@ import {
   Upload,
   Dialog,
   Carousel,
-  Message
+  Message,
+  Breadcrumb,
+  BreadcrumbItem,
+  Cascader
 } from 'element-ui';
 
 Vue.use(Menu);
@@ -40,6 +43,9 @@ Vue.use(Input);
 Vue.use(Upload);
 Vue.use(Dialog);
 Vue.use(Carousel);
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);
+Vue.use(Cascader);
 
 Vue.prototype.$message = Message
 

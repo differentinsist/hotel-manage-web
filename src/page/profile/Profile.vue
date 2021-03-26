@@ -1,31 +1,41 @@
 <template>
-  <div class="persontable">
-    <table>
-      <tr>
-        <td>名字:</td><td>{{person.name}}</td>
-        <td>地址:</td><td>{{person.adress}}</td>
-      </tr>
-      <tr>
-        <td>我的ID编号:</td><td>{{person.pid}}</td>
-        <td>电话:</td><td>{{person.phone}}</td>
-      </tr>
-      <tr>
-        <td>身份证:</td><td>{{person.idcard}}</td>
-      </tr>
-    </table>
-    <!--<div>-->
+  <div>
+    <!--面包屑放在每一个组价中；写死；好像不好-->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'hotelmall' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>本人业务</el-breadcrumb-item>
+      <el-breadcrumb-item>我的基本信息</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="persontable">
+      <table>
+        <tr>
+          <td>名字:</td><td>{{personOBJ.name}}</td>
+          <td>地址:</td><td>{{personOBJ.address}}</td>
+        </tr>
+        <tr>
+          <td>我的ID编号:</td><td>{{personOBJ.id}}</td>
+          <td>电话:</td><td>{{personOBJ.phone}}</td>
+        </tr>
+        <tr>
+          <td>身份证:</td><td>{{personOBJ.idcard}}</td>
+          <td>注册时间:</td><td>{{personOBJ.createdtime}}</td>
+        </tr>
+      </table>
+      <!--<div>-->
       <!--<button>替换头像</button>-->
       <!--<img src="../../assets/touxiang.png" alt="">-->
-    <!--</div>-->
-    <el-upload class="avatar-uploader"
-      :action="uploadURL"
-      :show-file-list="false"
-      :on-success="handleAvatarSuccess"
-      :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+      <!--</div>-->
+      <el-upload class="avatar-uploader"
+                 :action="uploadURL"
+                 :show-file-list="false"
+                 :on-success="handleAvatarSuccess"
+                 :before-upload="beforeAvatarUpload">
+        <img v-if="imageURL" :src="imageURL" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -36,30 +46,53 @@
     name: "profile",
     data(){
       return{
-        person: '',
-        //上传后返回来的图片在服务器的URL
-        imageUrl: 'http://image.leyou.com/group1/M00/00/00/wKjZgGBKxE6ARGchAAA1Q7CttRc836.png',
+        //默认图片路径（图片属性我单独抽取出来了，因为我把头像单独保存在sessionStorage中，这样方便更新）
+        imageURL: 'http://image.renthotel.com/hotelhappyimages/2/0/01xixuegui.jpg',
         //图片上传到服务器的地址
         uploadURL: 'http://api.renthotel.com/upload/headPortrait',
         //设置允许的图片类型
-        canPicture: ['image/jpeg','image/png']
+        canPicture: ['image/jpeg','image/png'],
+        //当前用户对象
+        personOBJ: {
+          id: '',
+          name: '',
+          idcard: '',
+          birthday: '',
+          address: '',
+          phone: '',
+          createdtime: ''
+        }
       }
     },
     created() {
-      request({
-        url: '/api/item/person/queryPersonByPid?pid=000001'
-      }).then(res => {
-        this.person = res.data;
-        console.log(res);
-    }).catch(err => {
-        console.log(err);
-    })
+      // 不用发请求获取数据吧，我在登陆组件里面把登陆成功的当前用户信息保存到了sessionStorage中了；直接拿就行,但是图片的话就要
+    //   request({
+    //     url: '/api/item/person/queryPersonByPid?pid=000001'
+    //   }).then(res => {
+    //     this.person = res.data;
+    //     console.log(res);
+    // }).catch(err => {
+    //     console.log(err);
+    // })
+
+      //从sessionStorage中拿到个人信息(没拿头像)
+      let getStr = window.sessionStorage.getItem('personobj');
+      let getObj = JSON.parse(getStr);
+      this.personOBJ = getObj;
+      //从sessionStorage中拿到头像
+      if (window.sessionStorage.getItem('personpicture') != null){
+        console.log('进来到这个if语句了吗---------------');
+        this.imageURL = window.sessionStorage.getItem('personpicture');
+        console.log('头像URL',this.imageURL);
+      }
     },
     methods: {
       //图片上传
       handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-        console.log('图片URL',imageUrl);
+        let image = URL.createObjectURL(file.raw);
+        this.imageURL = image;
+        console.log('图片URL',this.imageURL);
+        window.sessionStorage.setItem('personpicture',image);
       },
       beforeAvatarUpload(file) {
         // let canPicture = ['image/jpeg','image/png'];

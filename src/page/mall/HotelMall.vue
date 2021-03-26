@@ -1,9 +1,28 @@
 <template>
   <div>
+    <!--面包屑放在每一个组价中；写死；好像不好-->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'hotelmall' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>旅店详情</el-breadcrumb-item>
+    </el-breadcrumb>
+
+    <!--级联选择器-->
+    <div class="casca">
+      <el-cascader
+        placeholder="根据价格或房间号筛选"
+        :props="cascaderProps"
+        v-model="values"
+        :options="options1"
+        @change="handleChange"
+        @clear="dd"
+        clearable></el-cascader>
+    </div>
+
+
     <el-row class="huadong">
       <el-col :span="8" v-for="(o, index) in roomList" :key="o" :offset="index > 0 ? index : 0" class="col">
         <div class="wrapper">
-          <el-card :body-style="{ padding: '0px' }">
+          <el-card class="minCard" :body-style="{ padding: '0px' }">
             <img :src="roomList[index].roompicture" class="image">
             <div style="padding: 10px;" class="divs">
               <div class="roomspan"><span >房间编号：{{roomList[index].roomid}}</span></div>
@@ -17,13 +36,16 @@
         </div>
       </el-col>
 
+
+
       <!--弹出框放在这里了，别放上面的循环里-->
       <el-dialog
         title="请确认你的订单信息"
         :visible.sync="dialogVisible"
         :center="true"
         width="30%"
-        :before-close="handleClose">
+                                       >
+        <!--:before-close="handleClose">-->
         <div class="h3Class">
           <!--这里拿不到对应的值-->
           <h3>房间编号：{{dialogData.roomid}}</h3>
@@ -68,6 +90,29 @@
     name: "hotel-mall",
     data() {
       return {
+        //这个数组必须要有的，用来装选中的条目(级联选择器相关)
+        values: [],
+        //级联选择器的数据源
+        options1: [
+          {
+            value: 'jiage', label: '价格', children: [
+              {value: 'jiageshengxu', label: '价格从高到底'},
+              {value: 'jiagejiangxu', label: '价格从低到高'}
+            ]
+          },
+          {
+            value: 'fangjianhao', label: '房间号', children: [
+              {value: 'fjdadaoxiao', label: '房间编号降序'},
+              {value: 'fjxiaodaoda', label: '房间编号升序'}
+            ]
+          }
+        ],
+        //（级联选择器相关）用来指定显示哪个值
+        cascaderProps: {
+          value: 'value',
+          label: 'label',
+          children: 'children'
+        },
         roomList: [],
         //设置滚动的；改
         scroll: null,
@@ -77,10 +122,12 @@
         //怎么动态绑定一页显示的条数？[4,8,12,16,24],还有你要注意的是在page或rows改变时都需要重新发送请求的
         //你请求写在created里面了；怎么样在页码参数改变的时候重新发送请求？？
         rowsh: 4,
-        sortByh: 'roomprice',
-        desch: false,
         totalh: 0,
-
+        // 排序属性
+        sortAndDesc: {
+          sortBy: '',
+          desc: ''
+        },
         input: '', //搜索框,
         //订单弹出框（控制对话框的显示和隐藏）
         dialogVisible: false,
@@ -109,8 +156,8 @@
           params: {
             page: this.pageh,
             rows: this.rowsh,
-            sortBy: this.sortByh,
-            desc: this.desch
+            sortBy: this.sortAndDesc.sortBy,
+            desc: this.sortAndDesc.desc
           }
         }).then(res => {
           this.roomList = res.data.items;
@@ -140,13 +187,13 @@
         this.sendRequest();
       },
       //订单弹出框
-      handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-      })
-      .catch(_ => {});
-      },
+      // handleClose(done) {
+      //   this.$confirm('确认关闭？')
+      //     .then(_ => {
+      //       done();
+      // })
+      // .catch(_ => {});
+      // },
 
       //拿到当前房间的数据到弹出对话框中显示
       sendMsgToDialog(itemDialog){
@@ -178,6 +225,40 @@
         console.log('看看sessionStorage：',sessionStorage.getItem('obj')); //obj就相当于对象的键了；可以获取值了
         console.log('看看sessionStorage：',sessionObject); //整个sessionStorage里面的东西
         this.$router.replace('/myroom');
+      },
+
+      // 级联选择器会触发的方法(默认传递进来的是一个选择值的数组进来)  ["jiage", "jiageshengxu"]
+      handleChange(value){
+        console.log('级联选择器触发了吗,传递进来的参数是什么value',value);
+        if(value[0] == 'jiage'){
+          if (value[1] == 'jiageshengxu'){  //价格升序
+            this.sortAndDesc.sortBy = 'roomprice',
+            this.sortAndDesc.desc = 'true',
+            console.log('价格升序',value[1]);
+            this.sendRequest();
+          }else if (value[1] == 'jiagejiangxu'){  //价格降序
+            this.sortAndDesc.sortBy = 'roomprice',
+            this.sortAndDesc.desc = 'false';
+            console.log('价格降序',value[1]);
+            this.sendRequest();
+          }
+        }else if (value[0] == 'fangjianhao'){
+          if (value[1] == 'fjdadaoxiao'){  //房间号降序
+            this.sortAndDesc.sortBy = 'roomid';
+            this.sortAndDesc.desc = 'true';
+            console.log('房间号降序',value[1]);
+            this.sendRequest();
+          }else if (value[1] == 'fjxiaodaoda'){ //房间号升序
+            this.sortAndDesc.sortBy = 'roomid';
+            this.sortAndDesc.desc = 'false';
+            console.log('房间号升序',value[1]);
+            this.sendRequest();
+          }
+        }
+      },
+
+      dd(){
+        console.log('-------------')
       }
 
     },
@@ -191,6 +272,20 @@
 
 <style lang="less" scoped>
 
+  //级联选择器
+  .el-cascader {
+    /*width: 100%;*/
+    /*background-color: aquamarine;*/
+  }
+
+  /*级联选择器*/
+  .casca {
+    padding-top: 6px;
+    padding-left: 55px;
+    /*background-color: aquamarine;*/
+  }
+
+  /*卡片*/
   .el-col {
     margin-left: 0px;
   }
@@ -201,9 +296,14 @@
   /*显示太多的话；装不下浏览器自带自带滑动拉条
   是整体上去；很难看；自己搞一个*/
   .el-card {
+    /*width: 250px;*/
+    /*height: 320px;*/
+    /*padding-left: 10px;*/
+  }
+  //代替上面原生的el-card
+  .minCard {
     width: 250px;
     height: 320px;
-    /*padding-left: 10px;*/
   }
   .col {
     width: 300px;
@@ -221,6 +321,7 @@
     /*width: 100%;*/
     overflow: hidden;
     overflow-y: scroll;
+    padding-top: 15px;
   }
 
 

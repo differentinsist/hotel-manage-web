@@ -1,23 +1,75 @@
 <template>
   <div>
-    <!--这里使用原生的做一个-->
-    <div class="inputSearch">
-      <input type="text" id="inputh" placeholder="输入品牌查询">
-      <el-button icon="el-icon-search" circle @click="getInputValue"></el-button>
-    </div>
+    <!--面包屑放在每一个组价中；写死；好像不好-->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'hotelmall' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>旅店商城</el-breadcrumb-item>
+      <el-breadcrumb-item>商品详情</el-breadcrumb-item>
+    </el-breadcrumb>
 
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      :default-sort = "{prop: 'goodsid', order: 'ascending'}">
-      <el-table-column prop="goodsid" label="商品编号" sortable width="100"></el-table-column>
-      <el-table-column prop="goodsbrand" label="品牌" sortable width="80"></el-table-column>
-      <el-table-column prop="goodsname" label="商品名称" width="180"></el-table-column>
-      <el-table-column prop="goodsprice" label="商品价格(元)" sortable width="180"></el-table-column>
-      <el-table-column prop="goodsstock" label="库存" sortable width="80"></el-table-column>
-      <el-table-column prop="goodsdiscription" label="描述" width="200"></el-table-column>
-      <el-table-column prop="goodspicture" label="图片" width="180"></el-table-column>
-    </el-table>
+    <el-card class="cardClass">
+      <!--搜索框-->
+      <el-input placeholder="输入品牌或关键字查询" v-model="input3" class="inputSearch">
+        <el-button slot="append" icon="el-icon-search"></el-button>
+      </el-input>
+      <!--表格-->
+      <el-table
+        :data="tableData"
+        :default-sort = "{prop: 'goodsid', order: 'ascending'} ">
+        <el-table-column prop="goodsid" label="商品编号" sortable width="100"></el-table-column>
+        <el-table-column prop="goodsbrand" label="品牌" sortable width="80"></el-table-column>
+        <el-table-column prop="goodsname" label="商品名称" width="180"></el-table-column>
+        <el-table-column prop="goodsprice" label="商品价格(元)" sortable width="180"></el-table-column>
+        <el-table-column prop="goodsstock" label="库存" sortable width="80"></el-table-column>
+        <el-table-column prop="goodsdiscription" label="描述" width="200"></el-table-column>
+        <el-table-column prop="goodspicture" label="图片" width="180">
+          <template slot-scope="scope">
+            <el-image style="width: 100px; height: 100px" :src="scope.row.goodspicture"></el-image>
+          </template>
+        </el-table-column>
+        <el-table-column  label="操作" width="180">
+          <template slot-scope="scope" >
+            <el-button type="primary" @click="buyShop(scope.row)" round>点击购买</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+    </el-card>
+
+    <!--对话框-->
+    <el-dialog
+      class="buyDialog"
+      title="购买确认"
+      width="40%"
+      :visible.sync="dialogVisible"
+                                     >
+      <!--:before-close="handleClose">-->
+      <div class="dialogContent">
+        <!--弹出框左边-->
+        <table>
+          <tr><td>品牌：</td><td>{{dialogButtonData.goodsbrand}}</td></tr>
+          <tr><td>商品名称：</td><td>{{dialogButtonData.goodsname}}</td></tr>
+          <tr><td>单价：</td><td>{{dialogButtonData.goodsprice}}元</td></tr>
+          <tr><td>库存：</td><td>{{dialogButtonData.goodsstock}}</td></tr>
+        </table>
+        <!--弹出框右边的图片-->
+        <el-image
+          style="width: 230px; height: 250px"
+          :src="dialogButtonData.goodspicture"
+                                         >
+          <!--:preview-src-list="srcList">-->
+        </el-image>
+      </div>
+
+      <!--下方按钮-->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <!--<el-button type="primary" @click="routerCart(this.dialogButtonData)">确 定</el-button>-->
+        <el-button type="primary" v-model="dialogButtonData" @click="routerCart(dialogButtonData)">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
 
     <!--分页栏-->
     <div class="block">
@@ -31,6 +83,9 @@
         :total="totalh">
       </el-pagination>
     </div>
+
+
+
   </div>
 </template>
 
@@ -41,6 +96,22 @@
     name: "shop",
     data(){
       return {
+        //点击按钮获取到的对象数据(对话框)
+        dialogButtonData: {
+          gid: '',
+          goodsbrand: '',
+          goodsid: '',
+          goodsname: '',
+          goodsprice: '',
+          goodsstock: '',
+          goodspicture: '',
+          goodsdiscription: ''
+        },
+        // 图片路径
+        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+        //是否显示对话框
+        dialogVisible: false,
+
         //商品数据
         tableData: [],
         //发送get请求的参数；也就是分页参数
@@ -51,7 +122,7 @@
         desch: false,
         totalh: '',
         //搜索框
-        input: ''
+        input3: ''
 
 
       }
@@ -103,6 +174,23 @@
         this.pageh = val;
         console.log('page',this.pageh);
         this.sendRequest();
+      },
+
+      //购买商品的按钮
+      buyShop(value){
+        console.log('点击了购买按钮',value);
+        this.dialogVisible = true; //打开对话框
+        this.dialogButtonData = value;
+      },
+
+      //点击确定购买的按钮跳转到购物车页面（）
+      routerCart(obj){
+        this.dialogVisible = false;
+        console.log('商品对象传递进来没-这拿到也没有用,因为我要跳转到另一个页面了,作用域不同了-',obj);
+        //所以我还是暂时保存在sessionStorage中；其实保存在redis中才是正确的选择
+        let getStr = JSON.stringify(obj)
+        window.sessionStorage.setItem('dialogButtonData',getStr);
+        this.$router.replace('/cart');
       }
     }
   }
@@ -110,13 +198,64 @@
 
 <style lang="less" scoped>
 
-  .inputSearch {
-    /*width: 50px;*/
+  .el-table {
+    width: 100%;
+    padding-top: 5px;
   }
 
-  #inputh {
-    width: 250px;
-    height: 30px;
+  .el-table-column {
+    height: 150px;
   }
+
+  /*搜索框的长度*/
+  .inputSearch {
+    /*padding-top: 0px;*/
+    width: 400px;
+  }
+
+  .cardClass {
+
+  }
+
+  .el-breadcrumb {
+    padding-bottom: 7px;
+  }
+
+  /*对话框的样式*/
+  .dialogContent {
+    display: flex;
+    justify-content: center;
+    .el-image {
+      padding-left: 20px;
+    }
+    .tabel {
+      padding: 0;
+    }
+  }
+  /*对话框里面表格和图片的布局*/
+  /*.el-dialog__body {*/
+    /*padding: 10px;*/
+    /*color: #606266;*/
+    /*font-size: 14px;*/
+    /*word-break: break-all;*/
+  /*}*/
+
+  /*表格的样式*/
+  table {
+    border: 2px solid #e9e9e9;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  th, td {
+    padding: 10px 50px;
+    border: 1px solid #e9e9e9;
+    text-align: right;
+  }
+  th {
+    background-color: #f7f7f7;
+    color: #5c6b77;
+    font-weight: 600;
+  }
+
 
 </style>

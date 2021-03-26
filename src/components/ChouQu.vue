@@ -3,7 +3,7 @@
     <!--头部区域-->
     <el-header>
       <div>
-        <img src="../assets/touxiang.png" alt="">
+        <img :src="personURL" alt="">
         <span>旅店系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
@@ -16,22 +16,25 @@
         <el-menu
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#ffd04b" :router="true">
-          <!--一级菜单(首页)-->
+          active-text-color="#ffd04b"
+          :router="true"
+          :unique-opened="true"
+          :default-active="activePath">
+          <!--一级菜单(首页)  unique-opened 是只展开一个菜单 default-active是实现菜单高亮通过保存在sessionStorage中的值-->
           <el-submenu index="1" >
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>旅店首页</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item index="/hotelmall" @click="tzHome">
+            <el-menu-item index="/hotelmall" @click="tzHome('/hotelmall')">
               <template slot="title">
                 <i class="el-icon-open"></i>
                 <span>旅店详情</span>
               </template>
             </el-menu-item>
             <!--二级菜单-->
-            <el-menu-item index="/myroom" @click="tzMyRoom">
+            <el-menu-item index="/myroom" @click="tzMyRoom('/myroom')">
               <template slot="title">
                 <i class="el-icon-location"></i>
                 <span>我的房间</span>
@@ -40,20 +43,20 @@
           </el-submenu>
 
           <!--一级菜单(商城)-->
-          <el-submenu index="2" @click="tzHome">
+          <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-open"></i>
               <span>旅店商城</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item index="/shop" @click="tzShop">
+            <el-menu-item index="/shop" @click="tzShop('/shop')">
               <template slot="title">
                 <i class="el-icon-message"></i>
                 <span>商品详情</span>
               </template>
             </el-menu-item>
             <!--二级菜单-->
-            <el-menu-item index="/cart" @click="tzCart">
+            <el-menu-item index="/cart" @click="tzCart('/cart')">
               <template slot="title">
                 <i class="el-icon-location"></i>
                 <span>我的购物车</span>
@@ -68,23 +71,23 @@
               <span>本人业务</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item index="/profile" @click="tzProfile">
+            <el-menu-item index="/profile" @click="tzProfile('/profile')">
               <template slot="title">
                 <i class="el-icon-location"></i>
                 <span>我的基本信息</span>
               </template>
             </el-menu-item>
             <!--二级菜单-->
-            <el-menu-item index="/history" @click="tzHistory">
+            <el-menu-item index="/history" @click="tzHistory('/history')">
               <template slot="title">
                 <i class="el-icon-location"></i>
-                <span>历史记录</span>
+                <span>消费记录</span>
               </template>
             </el-menu-item>
           </el-submenu>
 
           <!--也作为一级菜单(评论区)-->
-          <el-menu-item index="/commentarea" @click="tzCommentArea">
+          <el-menu-item index="/commentarea" @click="tzCommentArea('/commentarea')">
             <template slot="title">
               <i class="el-icon-crop"></i>
               <span>本店评论</span>
@@ -92,7 +95,7 @@
           </el-menu-item>
 
           <!--也作为一级菜单(happytime)-->
-          <el-menu-item index="/happytime" @click="tzHappyTime">
+          <el-menu-item index="/happytime" @click="tzHappyTime('/happytime')">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>轻松一刻</span>
@@ -104,7 +107,8 @@
       </el-aside>
       <!--中间内容区域-->
       <el-main class="huadong">
-        <span>面包屑>>>> </span>
+        <!--面包屑-->
+
         <!--这个占位符必须有的；不然主页就没有内容-->
         <router-view></router-view>
       </el-main>
@@ -124,7 +128,10 @@
       name: "chouqu",
       data(){
         return {
-
+          //用于实现被点击的菜单高亮，通过把值保存在sessionStorage
+          activePath: '',
+          // 用户头像
+          personURL: '../assets/touxiang.png'
         }
       },
       components: {
@@ -138,42 +145,63 @@
           window.sessionStorage.clear(); //退出的话就清除浏览器的sessionStorage；就是去除token信息这样,
           this.$router.replace('/login');//清除后就定位到登陆页面；就得重新登陆
         },
-        tzHome(){
-          console.log('跳转到首页了吗');
+        tzHome(activePath){
+          console.log('跳转到首页了吗',activePath);
+          this.activePath = activePath;
+          window.sessionStorage.setItem('activePath',activePath);//把当前路径存到sessionStorage中，好实现菜单高亮
           this.$router.replace('/hotelmall');
         },
-        tzProfile(){
-          console.log('跳转到我的信息页面组件');
+        tzProfile(activePath){
+          this.activePath = activePath;
+          window.sessionStorage.setItem('activePath',activePath);//把当前路径存到sessionStorage中，好实现菜单高亮
           this.$router.replace('/profile');
         },
-        tzMyRoom(){
+        tzMyRoom(activePath){
+          this.activePath = activePath;                          //（不要）
+          window.sessionStorage.setItem('activePath',activePath);//这样写都有问题的（不要）
           this.$router.replace('/myroom');
         },
-        tzShop(){
+        tzShop(activePath){
+          this.activePath = activePath;
+          window.sessionStorage.setItem("activePath",activePath);
           this.$router.replace('/shop');
         },
-        tzHappyTime(){
+        tzHappyTime(activePath){
+          this.activePath = activePath;
+          window.sessionStorage.setItem('activePath',activePath);
           this.$router.replace('/happytime')
         },
-        tzCommentArea(){
+        tzCommentArea(activePath){
+          this.activePath = activePath;
+          window.sessionStorage.setItem('activePath',activePath);
           this.$router.replace('/commentarea')
         },
-        tzCart(){
+        tzCart(activePath){
+          this.activePath = activePath;
+          window.sessionStorage.setItem('activePath',activePath);
           this.$router.replace('/cart')
         },
-        tzHistory(){
+        tzHistory(activePath){
+          this.activePath = activePath;
+          window.sessionStorage.setItem('activePath',activePath);
           this.$router.replace('/history')
         }
       },
       created() {
-        // request({
-        //   url: '/api/item/person/queryPersonByPid?pid=000001'
-        // }).then(res => {
-        //   console.log(res);
-        // }).catch(err => {
-        //   console.log(err);
-        // })
+        this.activePath = window.sessionStorage.getItem('activePath');//把当前路径存到sessionStorage中，好实现菜单高亮
+
+        //从sessionStorage中获取头像的路径
+        this.personURL = window.sessionStorage.getItem('personpicture');
       }
+      //监听图片值的变化，让头像也跟着变化(监听好像是不起作用的，因为跨组件，且当前页面不会再更新
+      // 好像是使用vuex来共享数据且实现不同组件之间数据同步更新显示，百度一下)
+      // watch: {
+      //   'personURL': {
+      //     handler(newValue, oldValue){
+      //       console.log('实现监听了吗');
+      //     }
+      //   }
+      // }
     }
 </script>
 
@@ -207,6 +235,9 @@
   /*左侧边栏样式*/
   .el-aside {
     background-color: #333744;
+    .el-menu {
+      border-right: none; //菜单超出的黑边框就没了
+    }
   }
 
   .el-main {

@@ -1,31 +1,40 @@
 <template>
-  <div class="happytime">
-    <!--左边的图片Click 指示器触发 -->
-    <div>
-      <div class="leftbutton">
-        <el-button type="primary" plain @click="findAllHimages">常规类型({{leftcount1}}+)</el-button>
-        <el-button type="success" plain @click="findAllRimages">问候类型({{leftcount2}}+)</el-button>
-      </div>
-      <el-carousel class="leftcss"  trigger="click" height="350px" indicator-position="none">
-        <el-carousel-item v-for="(leftitem, index) in leftPictureList" :key="index">
-          <img class="leftimgclass" :src="leftitem.picture">
-        </el-carousel-item>
-      </el-carousel>
-    </div>
+  <div>
+    <!--面包屑放在每一个组价中；写死；好像不好-->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: 'hotelmall' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>轻松一刻</el-breadcrumb-item>
+    </el-breadcrumb>
 
-    <!--在右边的图片-->
-    <div>
-      <div class="rightbutton">
-        <el-button type="warning" round @click="findAllLimages">励志({{rightcount1}}+)</el-button>
-        <el-button type="danger" round @click="findAllGimages">游戏({{rightcount2}}+)</el-button>
+    <div class="happytime">
+      <!--左边的图片Click 指示器触发 -->
+      <div>
+        <div class="leftbutton">
+          <el-button type="primary" plain @click="findAllHimages">常规类型({{leftcount1}}+)</el-button>
+          <el-button type="success" plain @click="findAllRimages">问候类型({{leftcount2}}+)</el-button>
+        </div>
+        <el-carousel class="leftcss"  trigger="click" height="350px" indicator-position="none">
+          <el-carousel-item v-for="(leftitem, index) in leftPictureList" :key="index">
+            <img class="leftimgclass" :src="leftitem.picture">
+          </el-carousel-item>
+        </el-carousel>
       </div>
-      <el-carousel class="rightcss"  :interval="6000" type="card" height="350px" indicator-position="none">
-        <el-carousel-item v-for="(rightitem, index) in rightPictureList" :key="index">
-          <img class="rightimgclass" :src="rightitem.picture">
-        </el-carousel-item>
-      </el-carousel>
+
+      <!--在右边的图片-->
+      <div>
+        <div class="rightbutton">
+          <el-button type="warning" round @click="findAllLimages">励志({{rightcount1}}+)</el-button>
+          <el-button type="danger" round @click="findAllGimages">游戏({{rightcount2}}+)</el-button>
+        </div>
+        <el-carousel class="rightcss"  :interval="6000" type="card" height="350px" indicator-position="none">
+          <el-carousel-item v-for="(rightitem, index) in rightPictureList" :key="index">
+            <img class="rightimgclass" :src="rightitem.picture">
+          </el-carousel-item>
+        </el-carousel>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>

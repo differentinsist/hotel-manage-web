@@ -75,6 +75,11 @@
           //成功的话就跳转到主页；是在这里写吗？then里面是发送成功还是获取到数据成功？搞清楚
           window.sessionStorage.setItem('token',res.data.token);  //这里就是【第一步】
           console.log('发请求里面打印token=',window.sessionStorage.getItem('token'))
+          //把当前用户信息保存到sessionStorage中；用户在个人详情里面拿到个人信息来显示（用户头像抽取出来单独保存）
+          let getStr = JSON.stringify(res.data.person); //先转为字符串类型，因为不能直接存对象类型，拿出来的时候也是要把String变为Obj
+          window.sessionStorage.setItem('personobj', getStr);
+          // 单独保存头像到sessionStorage中
+          window.sessionStorage.setItem('personpicture',res.data.person.personpicture);
           this.$router.replace('/hotelmall');  //记得路由操作一定要放在设置sessionStorage之后(也就是第一步之后)不然index.js那里拿不到值
           return this.$message.success("登陆成功"); //提示
         }).catch((err) => {
@@ -97,7 +102,6 @@
           if(!valid) return;
           this.sendLoginRequest();  //发送请求
           // console.log('看那返回的结果',res.status);这里是那不到res的，所以暂时无法在这里判断
-
           // if(res.status !== 200) return this.$message.error("用户名或密码错误"); //用户名验证失败就提示密码错误
           // return this.$message.success("登陆成功");
         })
