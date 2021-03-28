@@ -3,7 +3,8 @@
     <!--头部区域-->
     <el-header>
       <div>
-        <img :src="personURL" alt="">
+        <!--<img :src="personURL" alt="">-->
+        <img :src="this.$store.state.imageurl" alt="">
         <span>旅店系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
@@ -137,6 +138,12 @@
       components: {
         HotelMall
       },
+      // 计算属性
+      // computed: {
+      //   imageP: function () {
+      //     this.personURL = this.$store.state.imageurl;
+      //   }
+      // },
       methods: {
 
         //退出的函数(退出之后要做什么处理吗；比如清除啥的、、)
@@ -186,12 +193,22 @@
           window.sessionStorage.setItem('activePath',activePath);
           this.$router.replace('/history')
         }
+
+        //实现头像更新
+        // changeImage: function(){
+        //   this.$store.commit('changeImage')
+        // }
       },
       created() {
         this.activePath = window.sessionStorage.getItem('activePath');//把当前路径存到sessionStorage中，好实现菜单高亮
 
         //从sessionStorage中获取头像的路径
         this.personURL = window.sessionStorage.getItem('personpicture');
+
+        if(this.$store.state.imageurl != window.sessionStorage.getItem('personpicture')){
+          this.$store.commit('changeImage')
+        }
+
       }
       //监听图片值的变化，让头像也跟着变化(监听好像是不起作用的，因为跨组件，且当前页面不会再更新
       // 好像是使用vuex来共享数据且实现不同组件之间数据同步更新显示，百度一下)
@@ -201,6 +218,12 @@
       //       console.log('实现监听了吗');
       //     }
       //   }
+      // }
+
+      //定义一个方法来实现vuex的获取值变化
+      // changeImageTogeder(){
+      //   this.personURL = this.$store.imageurl;
+      //   this.$store.commit('changeImage')
       // }
     }
 </script>

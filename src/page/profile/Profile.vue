@@ -25,13 +25,17 @@
       <!--<button>替换头像</button>-->
       <!--<img src="../../assets/touxiang.png" alt="">-->
       <!--</div>-->
+
       <el-upload class="avatar-uploader"
                  :action="uploadURL"
+                 :data="personOBJ"
                  :show-file-list="false"
                  :on-success="handleAvatarSuccess"
                  :before-upload="beforeAvatarUpload">
-        <img v-if="imageURL" :src="imageURL" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        <!--<img v-if="imageURL" :src="imageURL" class="avatar">原来的 -->
+        <h4>点击替换头像</h4>
+        <img :src="imageURL" class="avatar" alt="点击上传头像">
+        <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>原来的 -->
       </el-upload>
     </div>
   </div>
@@ -40,7 +44,7 @@
 
 <script>
 
-  import {request} from "../../network/request";
+  import {requestImage} from "../../network/request";
 
   export default {
     name: "profile",
@@ -75,11 +79,11 @@
     //     console.log(err);
     // })
 
-      //从sessionStorage中拿到个人信息(没拿头像)
+      //从sessionStorage中拿到个人信息(没拿头像)  我觉得还是发请求从数据库拿到信息和头像比较好
       let getStr = window.sessionStorage.getItem('personobj');
       let getObj = JSON.parse(getStr);
       this.personOBJ = getObj;
-      //从sessionStorage中拿到头像
+      //从sessionStorage中拿到头像 （我觉得还是发请求从数据库拿比较好）
       if (window.sessionStorage.getItem('personpicture') != null){
         console.log('进来到这个if语句了吗---------------');
         this.imageURL = window.sessionStorage.getItem('personpicture');
@@ -93,6 +97,9 @@
         this.imageURL = image;
         console.log('图片URL',this.imageURL);
         window.sessionStorage.setItem('personpicture',image);
+
+        // 这里的意思是我上传头像了，就改变(同步)Vuex中头像变量的URL
+        this.$store.commit('changeImage')  //额外添加的关于头像同步-----Vuex的同步更新值再组件页面不刷新的情况下也能实现---
       },
       beforeAvatarUpload(file) {
         // let canPicture = ['image/jpeg','image/png'];
@@ -113,6 +120,21 @@
         return isTrue && isLt2M ;
         // return true;
       }
+
+      // 【发请求】保存本人头像到数据库    不用单独发送了，什么elementUI框架已经帮助发送了，给出路径就行了
+      // savePersonHeadPortrait(){
+      //   requestImage({
+      //     url: 'upload/headPortrait',
+      //     method: 'post',
+      //     data: ''
+      //   }).then(() => {}).catch(() => {})
+      // }
+
+      // 同步头像
+      // changeImageTogeder(){
+      //   this.personURL = this.$store.imageurl;
+      //   this.$store.commit('changeImage') 这句代码起到更新值的作用，我使用在上面了；就一句代码就行了；不用写方法
+      // }
     }
   }
 </script>

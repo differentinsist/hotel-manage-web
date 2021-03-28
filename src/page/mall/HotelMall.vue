@@ -341,9 +341,10 @@
     float: right;
   }
 
+  /*房间图片的样式*/
   .image {
     width: 95%;
-    height: 180px;
+    height: 190px;
     padding: 5px;
     display: block;
   }

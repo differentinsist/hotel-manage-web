@@ -16,7 +16,8 @@
             <div>
               <el-image
                 style="width: 100px; height: 100px"
-                :src="dialogButtonData.goodspicture">
+                :src="dialogButtonData.goodspicture" >
+                <!--:src="dialogButtonData.goodspicture" alt="没有商品">-->
               </el-image>
             </div>
           </el-col>

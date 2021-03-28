@@ -1,1 +1,2 @@
 VUE跨域要设置那啥为true；在前端设置的
+1、使用过哪些技术点？axios、Vuex、sessionStorage、flex布局

@@ -32,6 +32,7 @@
         <el-form-item class="btns">
           <el-button type="primary" @click="register" :disabled="kaiguan">注册</el-button>
           <el-button type="info" class="rightButton" @click="resetLoginForm">清空</el-button>
+          <el-button type="primary" @click="goToLogin">返回登陆</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -154,6 +155,11 @@
         }).catch((err) => {
           console.log('根据用户名查询用户名是否被使用出错了吗',err);
         })
+      },
+
+      // 返回登陆页面
+      goToLogin(){
+        this.$router.replace('/login');
       }
     }
   }
