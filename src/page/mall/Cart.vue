@@ -84,6 +84,9 @@
         let getObj = JSON.parse(getStr);
         this.dialogButtonData = getObj;
       }
+
+      //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
+      this.$store.commit('changeActivePath')
     },
     methods: {
       // 点击购买按钮弹出购买成功界面

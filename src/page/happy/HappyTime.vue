@@ -71,6 +71,9 @@
         //这个是请求获得所有有趣图片的；后面要把主体放在methods里面；方便再调用；
         this.sendRequestLeft();
         this.sendRequestRight();  //同时发送两个请求；请求同一个接口；会不会有线程问题？？？？？？？？
+
+        //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
+        this.$store.commit('changeActivePath');
       },
       methods: {
         //（左边）图片的获取；同时加上imagetype来筛选；还有按照时间来排序；这样用户上传的就可以在最前面显示；还是放在后面吧；

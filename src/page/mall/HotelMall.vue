@@ -30,7 +30,9 @@
               <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；-->
               <!--<el-button type="text" @click="dialogVisible = true">点击下单</el-button>-->
               <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；把当前对象传递进去o，就是当前房间的信息了-->
-              <el-button type="text" @click="sendMsgToDialog(o)">点击下单</el-button>
+              <div class="btnClassA">
+                <el-button  type="primary" @click="sendMsgToDialog(o)" round>点击下单</el-button>
+              </div>
             </div>
           </el-card>
         </div>
@@ -57,7 +59,7 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <!--<el-button type="primary" @click="dialogVisible = false">确定下单</el-button>-->
-          <el-button type="primary" @click="jumpToMyRoom()">确定下单</el-button>
+          <el-button type="primary"  @click="jumpToMyRoom()" >确定下单</el-button>
         </span>
       </el-dialog>
 
@@ -146,6 +148,18 @@
     // present request GET  api路径前面必须有斜杠    拿到数组的对象的话，就要通过索引来拿数据？
     created(){
       this.sendRequest();
+
+      //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单 (这个首页组件需要吗)
+      //因为我在Vuex状态管理那里设置了activePath的初始值，如果这里本组件初始化的时候，也从status.js里面
+      //获取值，将会是空的，因为status也是从sessionStorage中获取值，刚开始sessionStorage中是为null的
+      // this.$store.commit('changeActivePath');  但是可以这样写：在点回来本hotelmall组件的时候可以高亮
+      // if(window.sessionStorage.getItem('activePath') != null){
+        if(this.$store.state.activePath != '/hotelmall'){
+          this.$store.commit('getHotelmallActivePath');//就是这样改，调用写法的函数
+        }
+        //我直接改变Vuex的status里面的值,他有个方法来修改；而不是直接改
+        // this.$store.commit('getHotelmallActivePath');//就是这样改，调用写法的函数
+      // }
     },
     methods: {
       //发送请求的代码抽取到这里
@@ -224,6 +238,11 @@
         // let getOb = JSON.parse(getStr);   //把字符串转为对象;也是在另一个页面写的
         console.log('看看sessionStorage：',sessionStorage.getItem('obj')); //obj就相当于对象的键了；可以获取值了
         console.log('看看sessionStorage：',sessionObject); //整个sessionStorage里面的东西
+
+        //实现菜单栏高亮(就是保存菜单的路径在sessionStorage里面；然后此路径的菜单就会高亮)
+        window.sessionStorage.setItem('activePath','/myroom');
+        // this.$store.commit('changeActivePath')不用在这里写；因为我在myroom组件的created里面写了
+
         this.$router.replace('/myroom');
       },
 
@@ -271,6 +290,10 @@
 </script>
 
 <style lang="less" scoped>
+
+  .btnClassA {
+    padding-left: 0%;
+  }
 
   //级联选择器
   .el-cascader {

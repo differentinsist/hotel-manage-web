@@ -89,6 +89,9 @@
         this.imageURL = window.sessionStorage.getItem('personpicture');
         console.log('头像URL',this.imageURL);
       }
+
+      //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
+      this.$store.commit('changeActivePath')
     },
     methods: {
       //图片上传

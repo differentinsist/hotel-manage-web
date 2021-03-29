@@ -20,7 +20,8 @@
           active-text-color="#ffd04b"
           :router="true"
           :unique-opened="true"
-          :default-active="activePath">
+          :default-active="this.$store.state.activePath">
+          <!--:default-active="activePath">原来的 -->
           <!--一级菜单(首页)  unique-opened 是只展开一个菜单 default-active是实现菜单高亮通过保存在sessionStorage中的值-->
           <el-submenu index="1" >
             <template slot="title">
@@ -37,7 +38,7 @@
             <!--二级菜单-->
             <el-menu-item index="/myroom" @click="tzMyRoom('/myroom')">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-medal"></i>
                 <span>我的房间</span>
               </template>
             </el-menu-item>
@@ -59,7 +60,7 @@
             <!--二级菜单-->
             <el-menu-item index="/cart" @click="tzCart('/cart')">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-stopwatch"></i>
                 <span>我的购物车</span>
               </template>
             </el-menu-item>
@@ -69,19 +70,19 @@
           <el-submenu index="3" >
             <template slot="title">
               <i class="el-icon-aim"></i>
-              <span>本人业务</span>
+              <span>用户信息</span>
             </template>
             <!--二级菜单-->
             <el-menu-item index="/profile" @click="tzProfile('/profile')">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-mic"></i>
                 <span>我的基本信息</span>
               </template>
             </el-menu-item>
             <!--二级菜单-->
             <el-menu-item index="/history" @click="tzHistory('/history')">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-copy-document"></i>
                 <span>消费记录</span>
               </template>
             </el-menu-item>
@@ -98,8 +99,16 @@
           <!--也作为一级菜单(happytime)-->
           <el-menu-item index="/happytime" @click="tzHappyTime('/happytime')">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-trophy-1"></i>
               <span>轻松一刻</span>
+            </template>
+          </el-menu-item>
+
+          <!--也作为一级菜单(happytime)-->
+          <el-menu-item index="/demand" @click="tzDemand('/demand')">
+            <template slot="title">
+              <i class="el-icon-discover"></i>
+              <span>需求建议</span>
             </template>
           </el-menu-item>
 
@@ -152,46 +161,79 @@
           window.sessionStorage.clear(); //退出的话就清除浏览器的sessionStorage；就是去除token信息这样,
           this.$router.replace('/login');//清除后就定位到登陆页面；就得重新登陆
         },
-        tzHome(activePath){
-          console.log('跳转到首页了吗',activePath);
-          this.activePath = activePath;
-          window.sessionStorage.setItem('activePath',activePath);//把当前路径存到sessionStorage中，好实现菜单高亮
+        tzHome(hotelmallPath){
+          console.log('跳转到首页了吗',hotelmallPath);
+          // this.activePath = hotelmallPath;
+          window.sessionStorage.setItem('activePath',hotelmallPath);//把当前路径存到sessionStorage中，好实现菜单高亮
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/hotelmall');
         },
-        tzProfile(activePath){
-          this.activePath = activePath;
-          window.sessionStorage.setItem('activePath',activePath);//把当前路径存到sessionStorage中，好实现菜单高亮
+        tzProfile(profilePath){
+          // this.activePath = profilePath;
+          window.sessionStorage.setItem('activePath',profilePath);//把当前路径存到sessionStorage中，好实现菜单高亮
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/profile');
         },
-        tzMyRoom(activePath){
-          this.activePath = activePath;                          //（不要）
-          window.sessionStorage.setItem('activePath',activePath);//这样写都有问题的（不要）
+        tzMyRoom(myroomPath){
+          // this.activePath = myroomPath;                          //（不要）
+          window.sessionStorage.setItem('activePath',myroomPath);//这样写都有问题的（不要）
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/myroom');
         },
-        tzShop(activePath){
-          this.activePath = activePath;
-          window.sessionStorage.setItem("activePath",activePath);
+        tzShop(shopPath){
+          // this.activePath = shopPath;
+          window.sessionStorage.setItem("activePath",shopPath);
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/shop');
         },
-        tzHappyTime(activePath){
-          this.activePath = activePath;
-          window.sessionStorage.setItem('activePath',activePath);
+        tzHappyTime(happytimePath){
+          // this.activePath = happytimePath;
+          window.sessionStorage.setItem('activePath',happytimePath);
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/happytime')
         },
-        tzCommentArea(activePath){
-          this.activePath = activePath;
-          window.sessionStorage.setItem('activePath',activePath);
+        tzCommentArea(commentareaPath){
+          // this.activePath = commentareaPath;
+          window.sessionStorage.setItem('activePath',commentareaPath);
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/commentarea')
         },
-        tzCart(activePath){
-          this.activePath = activePath;
-          window.sessionStorage.setItem('activePath',activePath);
+        tzCart(cartPath){
+          // this.activePath = cartPath;
+          window.sessionStorage.setItem('activePath',cartPath);
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/cart')
         },
-        tzHistory(activePath){
-          this.activePath = activePath;
-          window.sessionStorage.setItem('activePath',activePath);
+        tzHistory(historyPath){
+          // this.activePath = historyPath;
+          window.sessionStorage.setItem('activePath',historyPath);
+
+          // this.$store.commit('changeActivePath')
+
           this.$router.replace('/history')
+        },
+        tzDemand(demandPath){
+          // this.activePath = demandPath;
+          window.sessionStorage.setItem('activePath',demandPath);
+
+          // this.$store.commit('changeActivePath')
+
+          this.$router.replace('/demand');
+
         }
 
         //实现头像更新
@@ -205,8 +247,9 @@
         //从sessionStorage中获取头像的路径
         this.personURL = window.sessionStorage.getItem('personpicture');
 
+        //实现不同页面头像同步变化，在页面初始化后依旧可以拿到正确的头像路径。
         if(this.$store.state.imageurl != window.sessionStorage.getItem('personpicture')){
-          this.$store.commit('changeImage')
+          this.$store.commit('changeImage');
         }
 
       }

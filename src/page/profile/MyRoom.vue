@@ -73,6 +73,9 @@
         this.roomObject = getObj;//再把对象赋值给本VUE组件的的data的对象
       }
       console.log('看看是否拿到roomObject',this.roomObject);
+
+      //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
+      this.$store.commit('changeActivePath')
     }
 
   }

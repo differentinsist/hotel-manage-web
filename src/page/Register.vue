@@ -32,7 +32,7 @@
         <el-form-item class="btns">
           <el-button type="primary" @click="register" :disabled="kaiguan">注册</el-button>
           <el-button type="info" class="rightButton" @click="resetLoginForm">清空</el-button>
-          <el-button type="primary" @click="goToLogin">返回登陆</el-button>
+          <el-button type="primary" @click="goToLogin">返回登录</el-button>
         </el-form-item>
       </el-form>
     </div>

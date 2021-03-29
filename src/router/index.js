@@ -12,6 +12,7 @@ const Shop = () => import('../page/mall/Shop')
 const Cart = () => import('../page/mall/Cart')
 const HappyTime = () =>　import('../page/happy/HappyTime.vue')
 const CommentArea = () => import('../page/comment/CommentArea.vue')
+const Demand = () => import('../page/demand/Demand')
 
 const Login = () => import('../page/Login.vue')
 const Register = () => import('../page/Register.vue')
@@ -32,7 +33,8 @@ const routes = [
       {path: '/profile', component: Profile},
       {path: '/history', component: History},
       {path: '/happytime', component: HappyTime},
-      {path: '/commentarea', component: CommentArea}
+      {path: '/commentarea', component: CommentArea},
+      {path: '/demand', component: Demand}
     ]
   }
 ]

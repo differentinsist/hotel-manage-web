@@ -9,8 +9,8 @@
 
     <el-card class="cardClass">
       <!--搜索框-->
-      <el-input placeholder="输入品牌或关键字查询" v-model="input3" class="inputSearch">
-        <el-button slot="append" icon="el-icon-search"></el-button>
+      <el-input placeholder="输入品牌或关键字查询" v-model="setinputValue" class="inputSearch">
+        <el-button slot="append" class="btnClass" icon="el-icon-search" @click="searchByInput"></el-button>
       </el-input>
       <!--表格-->
       <el-table
@@ -65,7 +65,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <!--<el-button type="primary" @click="routerCart(this.dialogButtonData)">确 定</el-button>-->
-        <el-button type="primary" v-model="dialogButtonData" @click="routerCart(dialogButtonData)">确 定</el-button>
+        <el-button type="primary" v-model="dialogButtonData" @click="routerCart(dialogButtonData)">添加到购物车</el-button>
       </span>
     </el-dialog>
 
@@ -121,8 +121,8 @@
         sortByh: '',
         desch: false,
         totalh: '',
-        //搜索框
-        input3: ''
+        //搜索框值的绑定
+        setinputValue: ''
 
 
       }
@@ -130,6 +130,9 @@
     created() {
       //发送请求的方法体抽取到methods里面去了；这样在其他方法里面可以调用；在分页参数改变时实现重新拿取数据
       this.sendRequest();
+
+      //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
+      this.$store.commit('changeActivePath');
     },
     methods: {
       //发送请求的方法在抽取在这里了；调用直接写this.sendRequest();
@@ -146,16 +149,20 @@
           }
         }).then(res => {
           this.totalh = res.data.total;
+          this.tableData = res.data.items;
           console.log(res);
         this.tableData = res.data.items;
         }).catch(err => {
-          console.log(err);
+          console.log('响应失败会到这里面',err);
+        //用户乱搜索的时候；也就是请求参数错误，报400，但是后端不会报错的对吧；400的话，我就给他提示得了
+          this.$message.success("不好意思，找不到你要的内容");
         })
       },
-      //输入框触发的函数
-      getInputValue(){
-        this.keyh = document.getElementById('inputh').value;
-        console.log('key:',this.keyh);
+      //点击搜索按钮。输入框触发的函数
+      searchByInput(){
+        // this.keyh = document.getElementById('inputh').value;
+        this.keyh = this.setinputValue;
+        console.log('点击了搜索按钮(品牌帅选)key:',this.keyh);
         //然后就发送请求获取数据
         this.sendRequest();
       },
@@ -190,6 +197,9 @@
         //所以我还是暂时保存在sessionStorage中；其实保存在redis中才是正确的选择
         let getStr = JSON.stringify(obj)
         window.sessionStorage.setItem('dialogButtonData',getStr);
+
+        //设置一下sessionStorage中的路径，好实现点击按钮跳转后还能实现路由到的页面也高亮
+        window.sessionStorage.setItem('activePath','/cart');
         this.$router.replace('/cart');
       }
     }

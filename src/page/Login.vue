@@ -15,7 +15,7 @@
           <el-input type="password" v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary" @click="login">登陆</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" class="rightButton" @click="resetLoginForm">清空</el-button>
           <el-button type="info" class="registerButton" @click="goToRegister">去注册</el-button>
         </el-form-item>
