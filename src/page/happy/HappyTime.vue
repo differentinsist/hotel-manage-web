@@ -11,7 +11,7 @@
       <div>
         <div class="leftbutton">
           <el-button type="primary" plain @click="findAllHimages">常规类型({{leftcount1}}+)</el-button>
-          <el-button type="success" plain @click="findAllRimages">问候类型({{leftcount2}}+)</el-button>
+          <el-button type="success" plain @click="findAllRimages">问候好友类型({{leftcount2}}+)</el-button>
         </div>
         <el-carousel class="leftcss"  trigger="click" height="350px" indicator-position="none">
           <el-carousel-item v-for="(leftitem, index) in leftPictureList" :key="index">
@@ -79,7 +79,8 @@
         //（左边）图片的获取；同时加上imagetype来筛选；还有按照时间来排序；这样用户上传的就可以在最前面显示；还是放在后面吧；
         sendRequestLeft(){
           request({
-            url: '/api/item/happytime/findAllImages',
+            // url: '/api/item/happytime/findAllImages',
+            url: '/item/happytime/findAllImages',
             params: {
               imagetype: this.imagetypeleft,
               sortbycreatedtime: this.sortbycreatedtime
@@ -102,7 +103,8 @@
         //（右边）的图片获取
         sendRequestRight(){
           request({
-            url: '/api/item/happytime/findAllImages',
+            // url: '/api/item/happytime/findAllImages',
+            url: '/item/happytime/findAllImages',
             params: {
               imagetype: this.imagetyperight,
               sortbycreatedtime: this.sortbycreatedtime

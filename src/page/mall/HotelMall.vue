@@ -166,7 +166,8 @@
       sendRequest(){
         request({
           // url: '/api/item/room/showAllRoomMessage?page=1&rows=12&sortBy=roomprice&desc=false',
-          url: '/api/item/room/showAllRoomMessage',
+          // url: '/api/item/room/showAllRoomMessage',
+          url: '/item/room/showAllRoomMessage',
           params: {
             page: this.pageh,
             rows: this.rowsh,

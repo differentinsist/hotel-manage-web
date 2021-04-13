@@ -6,26 +6,40 @@
       <el-breadcrumb-item>我的房间</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-card class="box-card">
-      <span>我的房间信息：</span>
-      <table>
-        <tr>
-          <td>房间号</td>
-          <td>{{roomObject.roomid}}</td>
-        </tr>
-        <tr>
-          <td>时长</td>
-          <td>{{roomObject.roomtime}}</td>
-        </tr>
-        <tr>
-          <td>开门密码</td>
-          <td><span class="testcolor">{{roompasswd}}</span></td>
-        </tr>
-        <tr>
-          <td>价格</td>
-          <td>{{roomObject.roomprice}}元</td>
-        </tr>
-      </table>
+    <el-card >
+      <div class="cardClass">
+        <div class="flexLeft">
+          <span>我的房间信息：</span>
+          <table>
+            <tr>
+              <td>房间号</td>
+              <td>{{roomObject.roomid}}</td>
+            </tr>
+            <tr>
+              <td>时长</td>
+              <td>{{roomObject.roomtime}}</td>
+            </tr>
+            <tr>
+              <td>开门密码</td>
+              <td><span class="testcolor">{{roompasswd}}</span></td>
+            </tr>
+            <tr>
+              <td>价格</td>
+              <td>{{roomObject.roomprice}}元</td>
+            </tr>
+          </table>
+        </div>
+
+        <!--当前房间的图片-->
+        <!--<div class="flexRight">-->
+        <el-carousel class="roomImg"  :interval="6000" type="card" height="250px" indicator-position="none">
+          <el-carousel-item v-for="(rightitem, index) in roomPictureList" :key="index">
+            <img class="rightimgclass" :src="rightitem" alt="图片加载中">
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+
+      <!--</div>-->
     </el-card>
     <span>应该实现已被预订的房或正在被使用的房不显示在商店或者变成灰色,或者显示倒计时在按钮那里,然后按钮禁用</span>
 
@@ -40,6 +54,21 @@
     name: "my-room",
     data(){
       return {
+        //当前房间照片；我直接写死了【下面是本地的】
+        // roomPictureList: [
+        //   'http://image.renthotel.com/hotelhappyimages/1/1/room1.jpg',
+        //   'http://image.renthotel.com/hotelhappyimages/1/1/room2.jpg',
+        //   'http://image.renthotel.com/hotelhappyimages/1/1/room3.jpg',
+        //   'http://image.renthotel.com/hotelhappyimages/1/1/room4.jpg',
+        // ],
+        //【这是阿里云服务器的】
+        roomPictureList: [
+          'http://8.129.187.106/group1/M00/00/00/rB7LeWBsXZyAJpJNAACH26k-HN4057.jpg',
+          'http://8.129.187.106/group1/M00/00/00/rB7LeWBsXe2ARGdrAABUhJ84mrQ218.jpg',
+          'http://8.129.187.106/group1/M00/00/00/rB7LeWBsXcyAY4H0AABtynpYhO0193.jpg',
+          'http://8.129.187.106/group1/M00/00/00/rB7LeWBsXkuACyziAABHxvi6Zjw555.jpg',
+        ],
+
         //订房基本数据
         roomObject:{
           roomid: '无',
@@ -83,15 +112,33 @@
 
 <style lang="less" scoped>
 
+  /*轮播图*/
+  .roomImg {
+    width: 500px;
+  }
+
+  //图片样式
+  .rightimgclass {
+    width: 100%;
+    height: 100%;
+
+
+  }
 
   .mbx {
     padding-bottom: 20px;
   }
 
-  .box-card {
-    padding: 0px;
-    width: 100%;
-    height: 300px;
+  /*.box-card {*/
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*!*padding: 0px;*!*/
+    /*!*width: 100%;*!*/
+    /*!*height: 300px;*!*/
+  /*}*/
+  .cardClass {
+    display: flex;
+    justify-content: space-between;
   }
 
   //表格的样式
@@ -118,4 +165,20 @@
   }
 
 
+
+
+  //element走马灯的原始样式
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }
 </style>

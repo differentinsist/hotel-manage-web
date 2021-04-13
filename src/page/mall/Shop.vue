@@ -108,7 +108,7 @@
           goodsdiscription: ''
         },
         // 图片路径
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+        // url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
         //是否显示对话框
         dialogVisible: false,
 
@@ -139,7 +139,8 @@
       sendRequest() {
         request({
           // url: '/api/item/goods/showAllGoods?key=H&page=1&rows=8&sortBy=goodsprice&desc=true',
-          url: '/api/item/goods/showAllGoods',
+          // url: '/api/item/goods/showAllGoods',
+          url: '/item/goods/showAllGoods',
           params: {
             key: this.keyh,
             page: this.pageh,
@@ -197,6 +198,7 @@
         //所以我还是暂时保存在sessionStorage中；其实保存在redis中才是正确的选择
         let getStr = JSON.stringify(obj)
         window.sessionStorage.setItem('dialogButtonData',getStr);
+        this.$store.commit('getCartData');
 
         //设置一下sessionStorage中的路径，好实现点击按钮跳转后还能实现路由到的页面也高亮
         window.sessionStorage.setItem('activePath','/cart');
@@ -221,10 +223,6 @@
   .inputSearch {
     /*padding-top: 0px;*/
     width: 400px;
-  }
-
-  .cardClass {
-
   }
 
   .el-breadcrumb {
@@ -257,7 +255,7 @@
     border-spacing: 0;
   }
   th, td {
-    padding: 10px 50px;
+    padding: 10px 30px;
     border: 1px solid #e9e9e9;
     text-align: right;
   }

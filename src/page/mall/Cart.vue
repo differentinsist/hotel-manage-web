@@ -16,16 +16,19 @@
             <div>
               <el-image
                 style="width: 100px; height: 100px"
-                :src="dialogButtonData.goodspicture" >
+                :src="this.$store.state.cartData.goodspicture" alt="没有商品">
                 <!--:src="dialogButtonData.goodspicture" alt="没有商品">-->
               </el-image>
             </div>
           </el-col>
           <el-col span="12">
             <div>
-              <span>{{dialogButtonData.goodsname}}</span>
-              <span>{{dialogButtonData.goodsdiscription}}</span>
-              <span>{{dialogButtonData.goodsprice}}元</span>
+              <!--<span>{{dialogButtonData.goodsname}}</span>-->
+              <!--<span>{{dialogButtonData.goodsdiscription}}</span>-->
+              <!--<span>{{dialogButtonData.goodsprice}}元</span>-->
+              <span>{{this.$store.state.cartData.goodsname}}</span>
+              <span>{{this.$store.state.cartData.goodsdiscription}}</span>
+              <span>{{this.$store.state.cartData.goodsprice}}元</span>
             </div>
           </el-col>
           <el-col span="8">
@@ -79,11 +82,12 @@
     },
     //写在created里面好还是写在mounted里面好？
     created(){
-      if(window.sessionStorage.getItem('dialogButtonData') != null){
-        let getStr = window.sessionStorage.getItem('dialogButtonData');
-        let getObj = JSON.parse(getStr);
-        this.dialogButtonData = getObj;
+      if(window.sessionStorage.getItem('dialogButtonData') == null){
+        console.log('进来此钩子函数里面了吗')
+        this.$store.commit('clearCartData');
       }
+
+      // this.$store.commit('getCartData')
 
       //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
       this.$store.commit('changeActivePath')
@@ -95,7 +99,10 @@
       },
       // 点击【删除按钮】删除购物车记录
       deleteCart(){
-        // window.sessionStorage.removeItem('dialogButtonData');
+        //移除sessionStorage中购物车的信息；相当于删除购物车（最后还是要结合redis的）
+        window.sessionStorage.removeItem('dialogButtonData');//移除购物车中的数据
+        this.$store.commit('clearCartData');
+
         // this.dialogButtonData = null;
       }
     }

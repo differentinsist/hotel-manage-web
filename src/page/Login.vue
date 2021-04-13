@@ -34,8 +34,8 @@
       return {
         //输入框写入的数据会绑定到这个对象，可以拿到用于发送请求
         loginForm: {
-          username: 'admin',
-          password: 'administrator'
+          username: 'user1',
+          password: '123456'
         },
         //定义表单验证的规则
         loginFormRules: {
@@ -52,6 +52,7 @@
         }
       }
     },
+
     //vue发送post请求有个坑，后端无法识别参数；要一种转换对吗？
     computed: {
       getUser: function () {
@@ -63,10 +64,11 @@
     },
     methods:{
       //发送登陆请求的方法，抽取在这里了
+      //vue发送post请求有个坑，后端无法识别参数；要一种转换对吗？
       sendLoginRequest(){
         request({
           // url: '/api/user/person/query',
-          url: '/api/auth/accredit',
+          url: '/auth/accredit',
           method: 'post',
           // data:this.loginForm
           data: this.getUser

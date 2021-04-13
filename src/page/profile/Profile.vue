@@ -6,38 +6,43 @@
       <el-breadcrumb-item>本人业务</el-breadcrumb-item>
       <el-breadcrumb-item>我的基本信息</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="persontable">
-      <table>
-        <tr>
-          <td>名字:</td><td>{{personOBJ.name}}</td>
-          <td>地址:</td><td>{{personOBJ.address}}</td>
-        </tr>
-        <tr>
-          <td>我的ID编号:</td><td>{{personOBJ.id}}</td>
-          <td>电话:</td><td>{{personOBJ.phone}}</td>
-        </tr>
-        <tr>
-          <td>身份证:</td><td>{{personOBJ.idcard}}</td>
-          <td>注册时间:</td><td>{{personOBJ.createdtime}}</td>
-        </tr>
-      </table>
-      <!--<div>-->
-      <!--<button>替换头像</button>-->
-      <!--<img src="../../assets/touxiang.png" alt="">-->
-      <!--</div>-->
 
-      <el-upload class="avatar-uploader"
-                 :action="uploadURL"
-                 :data="personOBJ"
-                 :show-file-list="false"
-                 :on-success="handleAvatarSuccess"
-                 :before-upload="beforeAvatarUpload">
-        <!--<img v-if="imageURL" :src="imageURL" class="avatar">原来的 -->
-        <h4>点击替换头像</h4>
-        <img :src="imageURL" class="avatar" alt="点击上传头像">
-        <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>原来的 -->
-      </el-upload>
-    </div>
+    <el-card>
+      <div class="persontable">
+        <table>
+          <tr>
+            <td>名字:</td><td>{{personOBJ.name}}</td>
+            <td>地址:</td><td>{{personOBJ.address}}</td>
+          </tr>
+          <tr>
+            <td>我的ID编号:</td><td>{{personOBJ.id}}</td>
+            <td>电话:</td><td>{{personOBJ.phone}}</td>
+          </tr>
+          <tr>
+            <td>身份证:</td><td>{{personOBJ.idcard}}</td>
+            <td>注册时间:</td><td>{{personOBJ.createdtime}}</td>
+          </tr>
+        </table>
+        <!--<div>-->
+        <!--<button>替换头像</button>-->
+        <!--<img src="../../assets/touxiang.png" alt="">-->
+        <!--</div>-->
+
+        <el-upload class="avatar-uploader"
+                   :action="uploadURL"
+                   :data="personOBJ"
+                   :show-file-list="false"
+                   :on-success="handleAvatarSuccess"
+                   :before-upload="beforeAvatarUpload">
+          <!--<img v-if="imageURL" :src="imageURL" class="avatar">原来的 -->
+          <h4>点击替换头像</h4>
+          <img :src="imageURL" class="avatar" alt="点击上传头像">
+          <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>原来的 -->
+        </el-upload>
+      </div>
+
+    </el-card>
+
   </div>
 
 </template>
@@ -51,9 +56,14 @@
     data(){
       return{
         //默认图片路径（图片属性我单独抽取出来了，因为我把头像单独保存在sessionStorage中，这样方便更新）
-        imageURL: 'http://image.renthotel.com/hotelhappyimages/2/0/01xixuegui.jpg',
-        //图片上传到服务器的地址
-        uploadURL: 'http://api.renthotel.com/upload/headPortrait',
+        //imageURL: 'http://image.renthotel.com/hotelhappyimages/2/0/01xixuegui.jpg',
+        imageURL: 'http://8.129.187.106/touxiang/01xixuegui.jpg',
+        //图片上传到服务器的地址【这是本地的】  改为localhost还是端口好一点？
+        //uploadURL: 'http://api.renthotel.com/upload/headPortrait',
+        //uploadURL: 'http://8.129.187.106/upload/headPortrait',
+
+        //uploadURL: '/upload/headPortrait',阿里云的话就这样子
+        uploadURL: 'http://localhost:2263/upload/headPortrait',
         //设置允许的图片类型
         canPicture: ['image/jpeg','image/png'],
         //当前用户对象
@@ -143,6 +153,10 @@
 </script>
 
 <style lang="less" scoped>
+
+  .el-card {
+    margin-top: 10px;
+  }
 
   .persontable {
     display: flex;

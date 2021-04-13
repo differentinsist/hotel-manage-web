@@ -23,7 +23,8 @@ import {
   Message,
   Breadcrumb,
   BreadcrumbItem,
-  Cascader
+  Cascader,
+  Avatar
 } from 'element-ui';
 
 Vue.use(Menu);
@@ -46,6 +47,8 @@ Vue.use(Carousel);
 Vue.use(Breadcrumb);
 Vue.use(BreadcrumbItem);
 Vue.use(Cascader);
+//评论区的导入（这样子可以生效了吗）
+Vue.use(Avatar);
 
 Vue.prototype.$message = Message
 

@@ -81,6 +81,9 @@
           phone: [
             {required: false, message: "请输入假的手机号码", trigger: "blur"},
             {min:7, max:11, message:"电话号码在7-11位数之间", trigger:"blur"}
+          ],
+          birthday: [
+            {required: true, message: "请输入日期,格式xx-xx-xx", trigger: "blur"},
           ]
         }
       }
@@ -101,7 +104,7 @@
       //发送注册请求的方法，抽取在这里了（后面还要写一个验证用户名是否被使用过的请求--然后才到发送注册请求）
       sendRegisterRequest(){
         request({
-          url: '/api/user/person/register',
+          url: '/user/person/register',
           method: 'post',
           // data:this.loginForm
           data: this.getUser
@@ -136,7 +139,7 @@
       //查看用户名是否被使用过
       queryUsername(){
         request({
-          url: '/api/user/person/check',
+          url: '/user/person/check',
           params: {
             personname: this.loginForm.username,
             type: 1
