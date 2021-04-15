@@ -1,7 +1,15 @@
 <template>
   <div class="login_container">
+
+    <!--背景图片-->
+    <div class="login_background">
+      <img class="imgClass" :src="backgroundImage" alt="" />
+    </div>
+
+
     <!--最外层登陆的盒子div-->
     <div class="login_box">
+      <!--<h1 class="heard">旅店系统</h1>-->
       <!--放置图片的div-->
       <div class="touxiangclass">
         <img src="../assets/touxiang.png" alt="">
@@ -32,6 +40,8 @@
     name: "login",
     data(){
       return {
+        // 背景图片
+        backgroundImage: require('../assets/background/b6.jpg'),
         //输入框写入的数据会绑定到这个对象，可以拿到用于发送请求
         loginForm: {
           username: 'user1',
@@ -73,16 +83,22 @@
           // data:this.loginForm
           data: this.getUser
         }).then((res) => {
-          console.log('用户基本信息',res);
+          // console.log('用户基本信息',res);
           //成功的话就跳转到主页；是在这里写吗？then里面是发送成功还是获取到数据成功？搞清楚
           window.sessionStorage.setItem('token',res.data.token);  //这里就是【第一步】
-          console.log('发请求里面打印token=',window.sessionStorage.getItem('token'))
+          // console.log('发请求里面打印token=',window.sessionStorage.getItem('token'))
           //把当前用户信息保存到sessionStorage中；用户在个人详情里面拿到个人信息来显示（用户头像抽取出来单独保存）
           let getStr = JSON.stringify(res.data.person); //先转为字符串类型，因为不能直接存对象类型，拿出来的时候也是要把String变为Obj
           window.sessionStorage.setItem('personobj', getStr);
           // 单独保存头像到sessionStorage中
           window.sessionStorage.setItem('personpicture',res.data.person.personpicture);
           this.$router.replace('/hotelmall');  //记得路由操作一定要放在设置sessionStorage之后(也就是第一步之后)不然index.js那里拿不到值
+
+          // 登录成功把用户对象信息保存到Vuex中，我写在chouqu.vue组件没起作用,所以写在这里了【不能写在这里,不然点击
+        // 页面刷新按钮，Vuex中的userObj对象就是空的,当然也可以写在这里，不过还是要去Chouqu.vue组件写看看】
+          this.$store.commit('getUserObject');
+          // console.log('打印看看Vuex的东西',this.$store.state.userObj);
+
           return this.$message.success("登陆成功"); //提示
         }).catch((err) => {
           console.log('输出错误信息就行了吗',err);  //如果报错了都是打印结果，不做其他处理吗
@@ -121,12 +137,30 @@
 
   //设置最外面的div的也是和背景色；背景色可以替换为图片吗？？？
   .login_container {
-    background-color: #2b4b6d;
+    /*background-color: #2b4b6d;*/
     height: 100%;
+    /*width: 100%;*/
+    /*z-index: -1;*/
+    /*position: absolute;*/
+  }
+
+  login_background {
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    /*一定要添加这个，不然会多出页面，导致显示滚动条*/
+    position: absolute;
+  }
+  .imgClass {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    position: absolute;
   }
 
   //设置那个登陆框的颜色
   .login_box {
+    /*z-index: 1;*/
     width: 450px;
     height: 300px;
     background-color: #fff;

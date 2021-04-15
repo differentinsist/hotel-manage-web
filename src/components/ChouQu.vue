@@ -202,7 +202,8 @@
             'el-icon-position',
             'el-icon-message',
             'el-icon-sunny',
-            'el-icon-ice-drink'
+            'el-icon-ice-drink',
+            'el-icon-cpu'
           ]
         }
       },
@@ -304,10 +305,20 @@
         //this.personURL = window.sessionStorage.getItem('personpicture');
 
         //实现不同页面头像同步变化，在页面初始化后依旧可以拿到正确的头像路径。
-        if(this.$store.state.imageurl != window.sessionStorage.getItem('personpicture')){
-          this.$store.commit('changeImage');
-          console.log('chouqu组件的created里面,不等于写对了吗？？');
-        }
+        // if(this.$store.state.imageurl !== null){
+        //   let getStr = window.sessionStorage.getItem('personobj');
+        //   let getObj = JSON.parse(getStr);
+        //   if (this.$store.state.imageurl != getObj.personpicture)
+        //     this.$store.commit('changeImage');
+        //     console.log('chouqu组件的created里面,不等于写对了吗？？');
+        // };
+
+        // 用户登录进来就把用户对象保存到Vuex中
+        // this.$store.commit('getUserObject');  写在这里没起作用，我写在登陆页面了，登陆成功那里【建议两边都写,不然页面刷新】
+        this.$store.commit('getUserObject');
+
+        //用户刚刚注册进来没有头像的，
+        this.$store.commit('changeImage')
 
       }
       //监听图片值的变化，让头像也跟着变化(监听好像是不起作用的，因为跨组件，且当前页面不会再更新

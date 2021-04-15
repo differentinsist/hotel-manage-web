@@ -47,7 +47,8 @@ const menuData = [
     path: 'demand',
     title: '需求建议',
     child: [
-      {title: '需求详情', path: 'demand', id: 8}
+      {title: '需求详情', path: 'demand', id: 8},
+      {title: '系统原型', path: 'prototype', id: 9}
     ]
   }
 ]

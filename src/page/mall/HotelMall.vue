@@ -6,7 +6,7 @@
       <el-breadcrumb-item>旅店详情</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <!--级联选择器-->
+    <!--级联选择器  搜索框那里-->
     <div class="casca">
       <el-cascader
         placeholder="根据价格或房间号筛选"
@@ -18,20 +18,23 @@
         clearable></el-cascader>
     </div>
 
-
+    <!--房间主体区域-->
     <el-row class="huadong">
       <el-col :span="8" v-for="(o, index) in roomList" :key="o" :offset="index > 0 ? index : 0" class="col">
         <div class="wrapper">
           <el-card class="minCard" :body-style="{ padding: '0px' }">
             <img :src="roomList[index].roompicture" class="image">
             <div style="padding: 10px;" class="divs">
-              <div class="roomspan"><span >房间编号：{{roomList[index].roomid}}</span></div>
-              <div class="roomprice"><span>价格：{{roomList[index].roomprice}}元</span></div>
+              <div class="roomspan">
+                <span >房间:{{roomList[index].roomid }} </span>
+                <span>价格:{{roomList[index].roomprice}}元 {{roomList[index].roomtime}}</span>
+              </div>
               <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；-->
               <!--<el-button type="text" @click="dialogVisible = true">点击下单</el-button>-->
               <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；把当前对象传递进去o，就是当前房间的信息了-->
               <div class="btnClassA">
-                <el-button  type="primary" @click="sendMsgToDialog(o)" round>点击下单</el-button>
+                <el-button v-if="roomList[index].btnstatus"  type="primary" @click="sendMsgToDialog(o)" round>下单</el-button>
+                <el-button v-else  type="warning" @click="showExpireTime(o)">已被使用，查看多久后可用</el-button>
               </div>
             </div>
           </el-card>
@@ -40,7 +43,7 @@
 
 
 
-      <!--弹出框放在这里了，别放上面的循环里-->
+      <!--【下单按钮】弹出框   放在这里了，别放上面的循环里-->
       <el-dialog
         title="请确认你的订单信息"
         :visible.sync="dialogVisible"
@@ -54,12 +57,29 @@
           <h3>价格：{{dialogData.roomprice}}元</h3>
           <h3>时长：{{dialogData.roomtime}}</h3>
           <h3>提示：下单成功会生成一个房间密码用来开门</h3>
-          <h3>现在这个状态一个人只能定一间</h3>
+          <h3>一个账号最多只能开两间房</h3>
+          <!--<h3>现在这个状态一个人只能定一间</h3>-->
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <!--<el-button type="primary" @click="dialogVisible = false">确定下单</el-button>-->
           <el-button type="primary"  @click="jumpToMyRoom()" >确定下单</el-button>
+        </span>
+      </el-dialog>
+
+
+      <!--【显示倒计时按钮】弹出框  放在这里了，别放上面的循环里-->
+      <el-dialog
+        title="您现在还无法下单"
+        :visible.sync="dialogVisibleTime"
+        :center="true"
+        width="30%">
+        <div class="h3Class">
+          <h3>当前房间要等 {{setExpireTime}} 分钟后才能被使用</h3>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisibleTime = false">取 消</el-button>
+          <!--要不点取消就重新获取房间数据？？？-->
         </span>
       </el-dialog>
 
@@ -92,6 +112,13 @@
     name: "hotel-mall",
     data() {
       return {
+        //控制按钮显示或者显示倒计时
+        btnStatus: true,
+        //过期时间、倒计时
+        expiretime: 12,  //倒计时时间。默认是12小时
+        //点击【显示时间】获取到的当前房间号
+        expireRoomId: '',
+
         //这个数组必须要有的，用来装选中的条目(级联选择器相关)
         values: [],
         //级联选择器的数据源
@@ -118,6 +145,8 @@
         roomList: [],
         //设置滚动的；改
         scroll: null,
+        //当前用户名
+        // username: '',
 
         //我应该定义为一个对象的；这样就不用一个个赋值；有时候
         pageh: 1,
@@ -133,16 +162,28 @@
         input: '', //搜索框,
         //订单弹出框（控制对话框的显示和隐藏）
         dialogVisible: false,
+        //订单弹出框（控制对话框的显示和隐藏）
+        dialogVisibleTime: false,
 
         //拿到弹窗数据用来赋值，就是在按钮哪里写一个方法；把对象传递进去，拿到当前的值就是当前房间
         dialogData: {
+          userid: '',
           roomid: '',
           roomprice: '',
-          roomtime: ''
+          roomtime: '',
+          roompicture: '',
+          btnstatus: ''
         }
 
 
       };
+    },
+    //计算属性来实现求时间
+    computed: {
+      setExpireTime: function(){
+        let getMinute = this.expiretime/60;
+        return Math.ceil(getMinute);
+      }
     },
 
     // present request GET  api路径前面必须有斜杠    拿到数组的对象的话，就要通过索引来拿数据？
@@ -176,15 +217,52 @@
           }
         }).then(res => {
           this.roomList = res.data.items;
-        console.log(res.data.items);
-        console.log(res.data.total); //没有items那级别
-        console.log(res);
-        this.totalh = res.data.total;
-        console.log('有多少条记录：',this.totalh);
-      }).catch(err => {
+          console.log(res.data.items);
+          console.log(res.data.total); //没有items那级别
+          console.log(res);
+          this.totalh = res.data.total;
+          console.log('有多少条记录：',this.totalh);
+          console.log('看看房间对象：',this.roomList);
+        }).catch(err => {
           console.log(err);
-      })
+        })
       },
+
+      //发送请求（点击确定下单后就发送请求保存当前房间号到redis中,同时保存房间信息到mysql数据库中作为历史记录）
+      sendSaveRoomToRedisAndMysql(){
+        request({
+          url: '/item/ordermessage/saveRoomOrder',
+          params: {
+            roomid: this.dialogData.roomid,
+            roomprice: this.dialogData.roomprice,
+            buttonstatus: this.dialogData.btnstatus,
+            roomtime: this.dialogData.roomtime,
+            userid: this.$store.state.userObj.userid,
+            username: this.$store.state.userObj.username,
+            id: this.$store.state.userObj.userid
+          }
+        }).then(res => {
+          console.log('成功保存房间号到redis中了,房间对象也保存在数据库中,同时更新状态值让下单按钮不显示,什么时候可以显示？');
+        }).catch((err) => {
+          console.log('保存失败怎么处理',this.dialogData.btnstatus);
+        })
+      },
+
+      //发送请求从redis中找到当前房间的过期时间，如果刚好过期查不到怎么处理？？？临界情况。
+      sendQueryExpireTimeFromRedis(){
+        request({
+          url: '/item/ordermessage/findMessageRedis',
+          params: {
+            redisKeyString: this.expireRoomId
+          }
+        }).then((res) => {
+          console.log('看看怎么拿值',res);
+          this.expiretime = res.data
+        }).catch((err) => {
+          console.log('报错怎么处理err',err);
+        })
+      },
+
 
       //设置分页条的（在分页参数改变的时候重新发送请求重新获取分页后的数据；
       // 就是你选第几页的时候会触发一些方法；传递val参数进来；然后再从新发送请求）
@@ -212,10 +290,13 @@
 
       //拿到当前房间的数据到弹出对话框中显示
       sendMsgToDialog(itemDialog){
+        console.log('看看这个对象里面有用户的id吗,没有的因为这个是房间对象',itemDialog);
         this.dialogVisible = true; //意思是点击的时候改变为true就是运行弹出对话框;
+
         this.dialogData.roomid = itemDialog.roomid;
         this.dialogData.roomprice = itemDialog.roomprice;
         this.dialogData.roomtime = itemDialog.roomtime;
+        this.dialogData.btnstatus = itemDialog.btnstatus;
       },
 
       //跳转到我的订单页面；显示订房信息和开房门的密码（这是通过路由传递值的方式；不好；页面刷新就没了）
@@ -243,6 +324,9 @@
         //实现菜单栏高亮(就是保存菜单的路径在sessionStorage里面；然后此路径的菜单就会高亮)
         window.sessionStorage.setItem('activePath','/myroom');
         // this.$store.commit('changeActivePath')不用在这里写；因为我在myroom组件的created里面写了
+
+        // 发送请求,把房间号保存到redis中,同时改变房间表的状态值,同时把房间对象保存到roomhistory表作为历史记录
+        this.sendSaveRoomToRedisAndMysql();
 
         this.$router.replace('/myroom');
       },
@@ -279,6 +363,27 @@
 
       dd(){
         console.log('-------------')
+      },
+
+      //显示过期时间
+      showExpireTime(obj){
+        //赋值给当前房间号
+        this.expireRoomId = obj.roomid;
+        console.log('看看obj对象,是当前房间对象啊:',obj);
+        this.dialogVisibleTime = !this.dialogVisibleTime;
+        //发送请求查询redis中当前房间的过期时间
+        this.sendQueryExpireTimeFromRedis(); //可能刚好过期找不到应该怎么处理
+      },
+
+      //获取倒计时
+      getExpireTime(){
+        this.expiretime = setInterval(()=>{
+          this.expiretime--;
+          if(this.expiretime===0){
+//setInterval 不同于setTimeout，setInterval会无限反复执行;只需要把setInterval()赋值给一个变量，然后clearInterval()这个变量即可停止
+            clearInterval(this.expiretime)
+          }
+        },1000)
       }
 
     },
@@ -336,17 +441,17 @@
   .roomspan {
     height: 25px;
   }
-  .roomprice {
-    height: 25px;
-  }
+  /*.roomprice {*/
+    /*height: 25px;*/
+  /*}*/
 
-  .huadong {
-    height: 20%;
-    /*width: 100%;*/
-    overflow: hidden;
-    overflow-y: scroll;
-    padding-top: 15px;
-  }
+  /*.huadong {*/
+    /*height: 20%;*/
+    /*!*width: 100%;*!*/
+    /*overflow: hidden;*/
+    /*overflow-y: scroll;*/
+    /*padding-top: 15px;*/
+  /*}*/
 
 
 

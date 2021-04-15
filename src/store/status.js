@@ -19,17 +19,27 @@ const  store = new Vuex.Store({
       goodsstock: '',
       goodsdiscription: '',
       goodspicture: ''
+    },
+    //控制房间首页下单按钮的显示或隐藏,隐藏之后显示倒计时(隐藏是因为有人入住了,倒计时是显示还有多久可用)
+    btnStatus: true,
+    //当前用户对象
+    userObj: {
+      userid: '',
+      username: '',
+      idcard: ''
     }
 
   },
   mutations: {
     changeImage(state){
       console.log('状态管理有打印吗实现页面不初始化且不同页面头像同步显示--')
-      let ifImageIsNull = window.sessionStorage.getItem('personpicture')
-      if(ifImageIsNull == ''){
+      let getUserStr = window.sessionStorage.getItem('personobj')
+      let getUserObj = JSON.parse(getUserStr)
+      if(getUserObj.personpicture == null){
+        //如果写相对路径会生效吗
         state.imageurl = 'http://8.129.187.106/touxiang/01xixuegui.jpg'
       }else {
-        state.imageurl = ifImageIsNull
+        state.imageurl = getUserObj.personpicture
       }
     },
     changeActivePath(state){
@@ -61,6 +71,19 @@ const  store = new Vuex.Store({
         goodsdiscription: '',
         goodspicture: ''
       }
+    },
+    //改变状态值；实现显示按钮还是显示状态值
+    changeButtonStatus(state){
+      state.btnStatus = !state.btnStatus
+    },
+    //当前用户对象的基本数据
+    getUserObject(state){
+      let getUserStr = window.sessionStorage.getItem('personobj')
+      let getUserObject = JSON.parse(getUserStr)
+      state.userObj.userid = getUserObject.id
+      state.userObj.username = getUserObject.name
+      state.userObj.idcard = getUserObject.idcard
+      console.log('打印看看这个Vuex中的用户对象=',state.userObj)
     }
   }
 })

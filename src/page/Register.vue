@@ -1,7 +1,13 @@
 <template>
-  <div class="login_container">
+  <div class="register_container">
+
+    <!--背景图片-->
+    <div class="register_background">
+      <img class="imgClass" :src="groundImage" width="100%" height="100%" alt="" />
+    </div>
+
     <!--最外层登陆的盒子div-->
-    <div class="login_box">
+    <div class="register_box">
       <!--放置图片的div-->
       <div class="touxiangclass">
         <img src="../assets/touxiang.png" alt="">
@@ -9,16 +15,16 @@
       <!--from表单区域；也就是登陆用户名密码那些，是表单-->
       <el-form  ref="loginFormRef" class="login_form" :model="loginForm" :rules="loginFormRules" label-width="150px" >
         <el-form-item name="two" label="创建用户名:" prop="username"  >
-          <el-input v-model="loginForm.username" placeholder="3-10个字符之间"></el-input>
+          <el-input v-model="loginForm.username" placeholder="3-10个字符之间" @blur="handelBlur"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="queryUsername" round>点击查看用户名是否被使用过</el-button>
-        </el-form-item>
+        <!--<el-form-item>-->
+          <!--<el-button type="primary" @click="queryUsername" round>点击查看用户名是否被使用过</el-button>-->
+        <!--</el-form-item>-->
         <el-form-item label="设置密码:" prop="password">
           <el-input type="password" v-model="loginForm.password" placeholder="6-15个字符之间"></el-input>
         </el-form-item>
         <el-form-item label="身份证号(假的就行):" prop="idcard">
-          <el-input type="password" v-model="loginForm.idcard"  placeholder="懒得填可以先不填" ></el-input>
+          <el-input type="password" v-model="loginForm.idcard"  placeholder="懒得填可以先不填(假的就行)" ></el-input>
         </el-form-item>
         <el-form-item label="出生日期:" prop="birthday">
           <el-col :span="11">
@@ -27,7 +33,8 @@
           <el-col class="line" :span="2">-</el-col>
         </el-form-item>
         <el-form-item label="电话(假的就行):" prop="phone" >
-          <el-input type="password" v-model="loginForm.phone" placeholder="懒得填可以先不填"></el-input>
+          <el-input v-model="loginForm.phone" placeholder="懒得填可以先不填(假的就行)"></el-input>
+          <!--<el-input type="text" v-model="loginForm.phone" placeholder="懒得填可以先不填(假的就行)"></el-input>-->
         </el-form-item>
         <el-form-item class="btns">
           <el-button type="primary" @click="register" :disabled="kaiguan">注册</el-button>
@@ -47,6 +54,8 @@
     name: "register",
     data(){
       return {
+        // 背景图片
+        groundImage: require('../assets/background/b3.jpg'),
         //统计输入框已输入的个数
         text: '',
         //开关
@@ -152,8 +161,13 @@
             this.$message.error("此用户名已经有人使用，请换一个");
           };
           if(res.data === true){
-            this.kaiguan = false;
-            this.$message.success("没人用过，可以使用");
+            if(this.loginForm.username == ''){
+              this.kaiguan = true;
+              this.$message.error("用户名不能为空");
+            }else {
+              this.kaiguan = false;
+              this.$message.success("没人用过，可以使用");
+            }
           }
         }).catch((err) => {
           console.log('根据用户名查询用户名是否被使用出错了吗',err);
@@ -163,27 +177,53 @@
       // 返回登陆页面
       goToLogin(){
         this.$router.replace('/login');
+      },
+
+      //失去输入框失去焦点就发送请求查询这个用户名是否被使用
+      handelBlur(){
+        console.log('输入框失去焦点了,我就要发送请求');
+        this.queryUsername();
       }
+
     }
   }
 </script>
 
 <style lang="less" scoped>
 
-  /*设置最外面的div的也是和背景色；背景色可以替换为图片吗？？？*/
-  .login_container {
-    /*background-color: #2b4b6d;*/
-    background-color: rgb(239,228,176);
-    height: 100%;
+  /*设置最外面的div的也是和背景色；背景色可以替换为图片吗？？？          下面本来是都要的        */
+  /*.register_container {*/
+    /*!*background-color: #2b4b6d;*!*/
+    /*background-color: rgb(239,228,176);*/
+    /*height: 100%;*/
+  /*}*/
+
+  .register_background {
+    width:100%;
+    height:100%;  /**宽高100%是为了图片铺满屏幕 */
+    z-index:-1;
+    position: absolute;
   }
-  /*设置那个登陆框的颜色*/
-  .login_box {
+
+
+
+                                 /*设置那个登陆框的颜色*/
+  .register_box {
     width: 550px;
     height: 500px;
-    background-color: #fff;
+    /*background-color: #fff;*/
+
+    background-color: transparent;
+    /*border: #ffffff 1px solid;  边界 上下左右的边界*/
+    border-top: #ffffff 1px solid;
+    border-bottom: #ffffff 1px solid;
+
     /*background-image: url("src/assets/background.jpg");*/
     border-radius: 5px;        //登陆div区域的圆角
     position: absolute;  //相对位置
+
+    z-index:1;
+
     left: 50%;           //左边相对百分之五十
     top: 50%;            //顶部也是百分之五十
     transform: translate(-50%,-50%); //再设置这个就完全居中了

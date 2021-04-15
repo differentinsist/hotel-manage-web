@@ -13,6 +13,7 @@ const Cart = () => import('../page/mall/Cart')
 const HappyTime = () =>　import('../page/happy/HappyTime.vue')
 const CommentArea = () => import('../page/comment/CommentArea.vue')
 const Demand = () => import('../page/demand/Demand')
+const Prototype = () => import('../page/demand/Prototype')
 
 const Login = () => import('../page/Login.vue')
 const Register = () => import('../page/Register.vue')
@@ -34,7 +35,8 @@ const routes = [
       {path: '/history', component: History},
       {path: '/happytime', component: HappyTime},
       {path: '/commentarea', component: CommentArea},
-      {path: '/demand', component: Demand}
+      {path: '/demand', component: Demand},
+      {path: '/prototype', component: Prototype}
     ]
   }
 ]

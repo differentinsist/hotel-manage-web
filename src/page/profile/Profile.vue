@@ -7,6 +7,7 @@
       <el-breadcrumb-item>我的基本信息</el-breadcrumb-item>
     </el-breadcrumb>
 
+
     <el-card>
       <div class="persontable">
         <table>
@@ -36,7 +37,8 @@
                    :before-upload="beforeAvatarUpload">
           <!--<img v-if="imageURL" :src="imageURL" class="avatar">原来的 -->
           <h4>点击替换头像</h4>
-          <img :src="imageURL" class="avatar" alt="点击上传头像">
+          <!--<img :src="imageURL" class="avatar" alt="点击上传头像">-->
+          <img :src="this.$store.state.imageurl" class="avatar" alt="点击上传头像">
           <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>原来的 -->
         </el-upload>
       </div>
@@ -50,6 +52,7 @@
 <script>
 
   import {requestImage} from "../../network/request";
+  import {request} from "../../network/request";
 
   export default {
     name: "profile",
@@ -74,7 +77,8 @@
           birthday: '',
           address: '',
           phone: '',
-          createdtime: ''
+          createdtime: '',
+          personpicture: ''
         }
       }
     },
@@ -109,7 +113,13 @@
         let image = URL.createObjectURL(file.raw);
         this.imageURL = image;
         console.log('图片URL',this.imageURL);
-        window.sessionStorage.setItem('personpicture',image);
+        // window.sessionStorage.setItem('personpicture',image);
+
+        this.personOBJ.personpicture = image;
+        let getUserStr = JSON.stringify(this.personOBJ);
+        window.sessionStorage.setItem('personobj',getUserStr);
+
+        // this.sendRequestQueryUserMessage();
 
         // 这里的意思是我上传头像了，就改变(同步)Vuex中头像变量的URL
         this.$store.commit('changeImage')  //额外添加的关于头像同步-----Vuex的同步更新值再组件页面不刷新的情况下也能实现---
@@ -132,7 +142,17 @@
         // return isJPG && isLt2M ;
         return isTrue && isLt2M ;
         // return true;
-      }
+      },
+
+      // sendRequestQueryUserMessage(){
+      //   request({
+      //     url: '/item/'
+      //   }).then((res) => {
+      //     console.log('用户对象',res);
+      //   }).catch((err) => {
+      //     console.log('报错怎么处理',err);
+      //   })
+      // }
 
       // 【发请求】保存本人头像到数据库    不用单独发送了，什么elementUI框架已经帮助发送了，给出路径就行了
       // savePersonHeadPortrait(){

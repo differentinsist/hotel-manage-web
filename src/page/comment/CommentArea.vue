@@ -7,7 +7,7 @@
     </el-breadcrumb>
 
 
-    <h1>不好意思还没实现</h1>
+    <h1>还没实现</h1>
     <!--评论区-->
     <!--<div>-->
       <!--<div v-clickoutside="hideReplyBtn" @click="inputFocus" class="my-reply">-->
