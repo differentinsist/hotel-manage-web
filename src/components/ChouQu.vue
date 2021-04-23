@@ -346,7 +346,7 @@
   }
   /*头部栏样式*/
   .el-header {
-    /*position: relative; //新添加的*/
+    /*position: relative; //新添加的(bu)*/
     width: 100%;
     height: 60%;
 
@@ -391,6 +391,7 @@
     position: absolute;
     left: 200px;
     right: 0;
+    /*width: 100%;*/
     top: 60px;
     bottom: 0;
     overflow-y: scroll;

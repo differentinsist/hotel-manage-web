@@ -4,9 +4,10 @@
     <!--背景图片-->
     <div class="login_background">
       <img class="imgClass" :src="backgroundImage" alt="" />
+
     </div>
 
-
+      <!--<div><h1 class="heard">旅店系统</h1></div>-->
     <!--最外层登陆的盒子div-->
     <div class="login_box">
       <!--<h1 class="heard">旅店系统</h1>-->
@@ -25,7 +26,7 @@
         <el-form-item class="btns">
           <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" class="rightButton" @click="resetLoginForm">清空</el-button>
-          <el-button type="info" class="registerButton" @click="goToRegister">去注册</el-button>
+          <el-button type="info" class="registerButton" @click="goToRegister">简单注册</el-button>
         </el-form-item>
       </el-form>
     </div>

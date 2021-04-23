@@ -7,7 +7,6 @@
       <el-breadcrumb-item>历史记录</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-input >输入框</el-input>
 
     <!--测试显示和隐藏与切换  可删 <h1>还没有实现呢</h1>-->
     <!--<el-button @click="changeStatus">改变值</el-button>-->

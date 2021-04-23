@@ -24,7 +24,7 @@
           <el-input type="password" v-model="loginForm.password" placeholder="6-15个字符之间"></el-input>
         </el-form-item>
         <el-form-item label="身份证号(假的就行):" prop="idcard">
-          <el-input type="password" v-model="loginForm.idcard"  placeholder="懒得填可以先不填(假的就行)" ></el-input>
+          <el-input  v-model="loginForm.idcard"  placeholder="懒得填可以先不填(假的就行)" ></el-input>
         </el-form-item>
         <el-form-item label="出生日期:" prop="birthday">
           <el-col :span="11">
@@ -166,7 +166,7 @@
               this.$message.error("用户名不能为空");
             }else {
               this.kaiguan = false;
-              this.$message.success("没人用过，可以使用");
+              this.$message.success("此用户名没人用过，可以使用");
             }
           }
         }).catch((err) => {

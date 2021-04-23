@@ -33,8 +33,8 @@
               <!--<el-button type="text" @click="dialogVisible = true">点击下单</el-button>-->
               <!--订单弹出框的按钮，弹出框别放在循环里面，低级写法，放在外面了；把当前对象传递进去o，就是当前房间的信息了-->
               <div class="btnClassA">
-                <el-button v-if="roomList[index].btnstatus"  type="primary" @click="sendMsgToDialog(o)" round>下单</el-button>
-                <el-button v-else  type="warning" @click="showExpireTime(o)">已被使用，查看多久后可用</el-button>
+                <el-button v-if="roomList[index].btnstatus"  type="primary" @click="sendMsgToDialog(o)" round>下单入住</el-button>
+                <el-button v-else  type="warning" @click="showExpireTime(o,index)">已被使用，查看多久后可用</el-button>
               </div>
             </div>
           </el-card>
@@ -57,7 +57,7 @@
           <h3>价格：{{dialogData.roomprice}}元</h3>
           <h3>时长：{{dialogData.roomtime}}</h3>
           <h3>提示：下单成功会生成一个房间密码用来开门</h3>
-          <h3>一个账号最多只能开两间房</h3>
+          <!--<h3>一个账号最多只能开两间房</h3>-->
           <!--<h3>现在这个状态一个人只能定一间</h3>-->
         </div>
         <span slot="footer" class="dialog-footer">
@@ -92,7 +92,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageh"
-        :page-sizes="[4, 8, 12, 16, 24, 50]"
+        :page-sizes="[ 8, 12, 16, 24, 50]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalh">
@@ -113,9 +113,9 @@
     data() {
       return {
         //控制按钮显示或者显示倒计时
-        btnStatus: true,
+        // btnStatus: true,
         //过期时间、倒计时
-        expiretime: 12,  //倒计时时间。默认是12小时
+        expiretime: '',  //倒计时时间。默认是12小时
         //点击【显示时间】获取到的当前房间号
         expireRoomId: '',
 
@@ -152,7 +152,7 @@
         pageh: 1,
         //怎么动态绑定一页显示的条数？[4,8,12,16,24],还有你要注意的是在page或rows改变时都需要重新发送请求的
         //你请求写在created里面了；怎么样在页码参数改变的时候重新发送请求？？
-        rowsh: 4,
+        rowsh: 8,
         totalh: 0,
         // 排序属性
         sortAndDesc: {
@@ -173,7 +173,19 @@
           roomtime: '',
           roompicture: '',
           btnstatus: ''
+        },
+        //用来只装按钮状态的对象 key(房间号)===value(过期时间;为null就是无人预定)
+        buttomStatusObj: {
+          "1001": '',
+          "1002": '',
+          "1003": '',
+          "1004": '',
+          "1005": '',
+          "1006": '',
+          "1007": '',
+          "1008": ''
         }
+
 
 
       };
@@ -181,7 +193,12 @@
     //计算属性来实现求时间
     computed: {
       setExpireTime: function(){
-        let getMinute = this.expiretime/60;
+        let getMinute = this.expiretime/60;  //60除以60=1
+        console.log('看看为null的时候getMinute除以60的结果是什么',getMinute);
+        if(getMinute == 1){
+          return 0 ;
+          // return ;
+        }
         return Math.ceil(getMinute);
       }
     },
@@ -219,7 +236,6 @@
           this.roomList = res.data.items;
           console.log(res.data.items);
           console.log(res.data.total); //没有items那级别
-          console.log(res);
           this.totalh = res.data.total;
           console.log('有多少条记录：',this.totalh);
           console.log('看看房间对象：',this.roomList);
@@ -249,7 +265,7 @@
       },
 
       //发送请求从redis中找到当前房间的过期时间，如果刚好过期查不到怎么处理？？？临界情况。
-      sendQueryExpireTimeFromRedis(){
+      sendQueryExpireTimeFromRedis(listIndex){
         request({
           url: '/item/ordermessage/findMessageRedis',
           params: {
@@ -257,9 +273,21 @@
           }
         }).then((res) => {
           console.log('看看怎么拿值',res);
-          this.expiretime = res.data
+          console.log('打印传递进来的listIndex看看有值吗:',listIndex);
+          if(res.data == "666"){
+            console.log('进入到这里了吗');
+            this.expiretime = 60;  //redis中没有这个房间号了；60是随机设置而已、
+            // 其实啥都行、上面是除以60所以我这里写60这样子相除就是1;方便判断。
+            this.roomList[listIndex].btnstatus = true;
+            console.log('看看有这个值吗',this.roomList[listIndex].btnstatus);
+            return ;  //要这样子加return吗？？、
+          }else{
+            this.expiretime = res.data;
+            return ;
+          }
         }).catch((err) => {
           console.log('报错怎么处理err',err);
+          // this.btnStatus = true;
         })
       },
 
@@ -366,16 +394,17 @@
       },
 
       //显示过期时间
-      showExpireTime(obj){
+      showExpireTime(obj,index){
         //赋值给当前房间号
         this.expireRoomId = obj.roomid;
         console.log('看看obj对象,是当前房间对象啊:',obj);
         this.dialogVisibleTime = !this.dialogVisibleTime;
         //发送请求查询redis中当前房间的过期时间
-        this.sendQueryExpireTimeFromRedis(); //可能刚好过期找不到应该怎么处理
+        let listIndex = index;
+        this.sendQueryExpireTimeFromRedis(listIndex); //可能刚好过期找不到应该怎么处理
       },
 
-      //获取倒计时
+      //获取倒计时（没用到）
       getExpireTime(){
         this.expiretime = setInterval(()=>{
           this.expiretime--;

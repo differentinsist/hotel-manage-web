@@ -6,7 +6,8 @@ export function request(config){
     //放到阿里云的话直接这样子写：  baseURL: '/api',
     const instance1 = axios.create({
       baseURL: 'http://localhost:12261/api',
-      // baseURL: '/api',  【部署到阿里云就改成这样就行】
+      //【部署到阿里云就改成这样就行】
+      // baseURL: '/api',
       timeout: 5000
     })
     //发送真正的网络请求
@@ -26,6 +27,7 @@ export function requestImage(config){
     //放到阿里云的话直接这样子写：  baseURL: '/upload',
     const instance2 = axios.create({
       baseURL: 'http://localhost:2263/upload',
+      // baseURL: '/upload',
       timeout: 5000
     })
     //发送真正的网络请求

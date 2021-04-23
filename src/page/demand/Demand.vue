@@ -30,7 +30,7 @@
         style="width: 100%"
         height="400"
         :row-class-name="tableRowClassName">
-        <el-table-column prop="demand" label="用户的需求" width="800"></el-table-column>
+        <el-table-column prop="demand" label="用户的需求" width="900"></el-table-column>
         <el-table-column prop="createtime" label="创建时间"></el-table-column>
       </el-table>
 
@@ -100,7 +100,7 @@
           personpicture: ''
         },
         //单独拿出名字来
-        name: null ,
+        userid: null ,
         clearable: false
 
       }
@@ -115,7 +115,7 @@
       //在页面初始化之后都更新一下路径的状态值；好实现高亮菜单
       this.$store.commit('changeActivePath')
 
-      this.name = this.userObj.name;
+      // this.name = this.userObj.name;
       this.sendRequestFindAllDemand();
     },
     methods: {
@@ -135,7 +135,7 @@
             page: this.baseAllData.page,
             rows: this.baseAllData.rows,
             sortBy: this.baseAllData.sortBy,
-            dname: this.name,
+            userid: this.userid,
             desc: this.baseAllData.desc
           }
         }).then((res) => {
@@ -151,6 +151,7 @@
         request({
           url: '/item/demand/saveUserDemand',
           params: {
+            userid: this.userObj.id,
             dname: this.userObj.name,
             demand: this.textarea,
             status: this.dstatus
@@ -195,7 +196,7 @@
 
       //查询所有用户需求
       queryAllDemand(){
-        this.name = null,
+        this.userid = null,
         // this.name = '',
         this.baseAllData.page = 1;
         console.log('查询所有的需求-----------')
@@ -205,7 +206,7 @@
       queryMyDemand(){
         console.log('查询我自己的需求');
         this.baseAllData.page = 1;
-        this.name = this.userObj.name;
+        this.userid = this.userObj.id;
         this.sendRequestFindAllDemand();
       }
 
